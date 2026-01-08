@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin | Mountainside Elks Lodge #1585</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <style>
+    .admin-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+    }
+    
+    /* Login Screen */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-50);
+    }
+    .login-box {
+      background: var(--white);
+      padding: var(--space-2xl);
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-box h1 {
+      font-size: 1.5rem;
+      margin-bottom: var(--space-xl);
+      text-align: center;
+    }
+    
+    /* Admin Header */
+    .admin-header {
+      background: var(--navy);
+      color: var(--white);
+      padding: var(--space-lg) var(--space-xl);
+      margin-bottom: var(--space-xl);
+    }
+    .admin-header__inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-header h1 {
+      font-size: 1.25rem;
+      color: var(--white);
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xl);
+      border-bottom: 2px solid var(--gray-200);
+      padding-bottom: var(--space-sm);
+    }
+    .tab {
+      padding: var(--space-sm) var(--space-lg);
+      border: none;
+      background: none;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      transition: all var(--transition-fast);
+    }
+    .tab:hover {
+      color: var(--navy);
+      background: var(--gray-50);
+    }
+    .tab.active {
+      color: var(--navy);
+      background: var(--gray-100);
+    }
+    .tab-badge {
+      background: var(--gold);
+      color: var(--navy-dark);
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: var(--space-xs);
+    }
+    
+    /* Tab Content */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Cards & Tables */
+    .admin-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-xl);
+    }
+    .admin-card h2 {
+      font-size: 1.25rem;
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--gray-100);
+    }
+    
+    /* Form Styles */
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color var(--transition-fast);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--navy);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+    }
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Event List */
+    .event-list {
+      list-style: none;
+    }
+    .event-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--gray-100);
+      gap: var(--space-md);
+    }
+    .event-item:last-child {
+      border-bottom: none;
+    }
+    .event-item__info {
+      flex: 1;
+    }
+    .event-item__title {
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+    .event-item__meta {
+      font-size: 0.875rem;
+      color: var(--gray-500);
+    }
+    .event-item__actions {
+      display: flex;
+      gap: var(--space-sm);
+    }
+    .event-item--past {
+      opacity: 0.5;
+    }
+    
+    /* Inquiry List */
+    .inquiry-item {
+      padding: var(--space-lg);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      margin-bottom: var(--space-md);
+    }
+    .inquiry-item--new {
+      border-left: 4px solid var(--gold);
+      background: rgba(212, 160, 18, 0.05);
+    }
+    .inquiry-item__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-md);
+    }
+    .inquiry-item__name {
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    .inquiry-item__date {
+      font-size: 0.875rem;
+      color: var(--gray-500);
+    }
+    .inquiry-item__details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+      font-size: 0.9375rem;
+    }
+    .inquiry-item__details strong {
+      color: var(--gray-500);
+      font-weight: 400;
+    }
+    .inquiry-item__message {
+      background: var(--gray-50);
+      padding: var(--space-md);
+      border-radius: 6px;
+      margin-bottom: var(--space-md);
+    }
+    .inquiry-item__actions {
+      display: flex;
+      gap: var(--space-sm);
+    }
+    
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .status-badge--new {
+      background: var(--gold);
+      color: var(--navy-dark);
+    }
+    .status-badge--contacted {
+      background: #3182ce;
+      color: white;
+    }
+    .status-badge--booked {
+      background: #38a169;
+      color: white;
+    }
+    .status-badge--closed {
+      background: var(--gray-400);
+      color: white;
+    }
+    
+    /* Buttons */
+    .btn--small {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+    .btn--danger {
+      background: #e53e3e;
+      border-color: #e53e3e;
+      color: white;
+    }
+    .btn--danger:hover {
+      background: #c53030;
+      border-color: #c53030;
+      color: white;
+    }
+    .btn--ghost {
+      background: transparent;
+      border: 1px solid var(--gray-300);
+      color: var(--gray-600);
+    }
+    .btn--ghost:hover {
+      background: var(--gray-50);
+      color: var(--gray-700);
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-3xl);
+      color: var(--gray-500);
+    }
+    .empty-state__icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+    }
+    
+    /* Hidden */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-box">
+      <h1>🦌 Elks Admin</h1>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="admin-password">Admin Password</label>
+          <input type="password" id="admin-password" required placeholder="Enter admin password">
+        </div>
+        <button type="submit" class="btn btn--primary" style="width: 100%;">Login</button>
+        <p id="login-error" style="color: #e53e3e; text-align: center; margin-top: var(--space-md); display: none;">
+          Incorrect password. Please try again.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard (hidden until login) -->
+  <div id="admin-dashboard" class="hidden">
+    
+    <!-- Admin Header -->
+    <header class="admin-header">
+      <div class="admin-header__inner">
+        <h1>🦌 Mountainside Elks Admin</h1>
+        <div>
+          <a href="index.html" class="btn btn--secondary btn--small" style="margin-right: var(--space-sm);">View Site</a>
+          <button id="logout-btn" class="btn btn--ghost btn--small" style="color: var(--white); border-color: var(--white);">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-container">
+      
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="events">Events</button>
+        <button class="tab" data-tab="recurring">Recurring Events</button>
+        <button class="tab" data-tab="inquiries">Hall Inquiries <span class="tab-badge" id="inquiry-count">0</span></button>
+        <button class="tab" data-tab="messages">Messages <span class="tab-badge" id="message-count">0</span></button>
+      </div>
+
+      <!-- Events Tab -->
+      <div id="events-tab" class="tab-content active">
+        
+        <!-- Add Event Form -->
+        <div class="admin-card">
+          <h2>Add New Event</h2>
+          <form id="add-event-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="event-title">Event Title *</label>
+                <input type="text" id="event-title" required placeholder="e.g., St. Patrick's Day Dinner">
+              </div>
+              <div class="form-group">
+                <label for="event-date">Date *</label>
+                <input type="date" id="event-date" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="event-time">Time</label>
+                <input type="text" id="event-time" placeholder="e.g., 6:00 PM - 9:00 PM">
+              </div>
+              <div class="form-group">
+                <label for="event-tag">Tag</label>
+                <select id="event-tag">
+                  <option value="Open to All">Open to All</option>
+                  <option value="Members & Guests">Members & Guests</option>
+                  <option value="Members Only">Members Only</option>
+                  <option value="Fundraiser">Fundraiser</option>
+                  <option value="Community Event">Community Event</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="event-emoji">Emoji Icon</label>
+                <input type="text" id="event-emoji" placeholder="e.g., 🎉 ☘️ 🥩" maxlength="4">
+              </div>
+              <div class="form-group">
+                <label for="event-image">Image Filename (optional)</label>
+                <input type="text" id="event-image" placeholder="e.g., event-stpatricks.jpg">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="event-description">Description *</label>
+              <textarea id="event-description" rows="3" required placeholder="Brief description of the event..."></textarea>
+            </div>
+            <button type="submit" class="btn btn--primary">Add Event</button>
+          </form>
+        </div>
+
+        <!-- Event List -->
+        <div class="admin-card">
+          <h2>Upcoming Events</h2>
+          <ul id="event-list" class="event-list">
+            <li class="empty-state">
+              <div class="empty-state__icon">📅</div>
+              <p>Loading events...</p>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Past Events -->
+        <div class="admin-card">
+          <h2>Past Events</h2>
+          <ul id="past-event-list" class="event-list">
+            <li class="empty-state">
+              <div class="empty-state__icon">📅</div>
+              <p>Loading past events...</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Recurring Events Tab -->
+      <div id="recurring-tab" class="tab-content">
+        <div class="admin-card">
+          <h2>Add Recurring Event</h2>
+          <form id="add-recurring-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="recurring-title">Event Title *</label>
+                <input type="text" id="recurring-title" required placeholder="e.g., Friday Karaoke">
+              </div>
+              <div class="form-group">
+                <label for="recurring-schedule">Schedule *</label>
+                <input type="text" id="recurring-schedule" required placeholder="e.g., Every 4th Friday • 8:00 PM">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="recurring-emoji">Emoji Icon</label>
+                <input type="text" id="recurring-emoji" placeholder="e.g., 🎤" maxlength="4">
+              </div>
+              <div class="form-group">
+                <label for="recurring-open">Open to Public?</label>
+                <select id="recurring-open">
+                  <option value="true">Yes - Open to All</option>
+                  <option value="false">No - Members & Guests</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="recurring-description">Description *</label>
+              <textarea id="recurring-description" rows="3" required placeholder="Brief description..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="recurring-sort">Sort Order</label>
+              <input type="number" id="recurring-sort" value="10" min="1" max="99">
+              <small style="color: var(--gray-500);">Lower numbers appear first</small>
+            </div>
+            <button type="submit" class="btn btn--primary">Add Recurring Event</button>
+          </form>
+        </div>
+
+        <div class="admin-card">
+          <h2>Current Recurring Events</h2>
+          <ul id="recurring-list" class="event-list">
+            <li class="empty-state">
+              <div class="empty-state__icon">🔄</div>
+              <p>Loading recurring events...</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Hall Inquiries Tab -->
+      <div id="inquiries-tab" class="tab-content">
+        <div class="admin-card">
+          <h2>Hall Rental Inquiries</h2>
+          <div id="inquiries-list">
+            <div class="empty-state">
+              <div class="empty-state__icon">📋</div>
+              <p>Loading inquiries...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages Tab -->
+      <div id="messages-tab" class="tab-content">
+        <div class="admin-card">
+          <h2>Contact Messages</h2>
+          <div id="messages-list">
+            <div class="empty-state">
+              <div class="empty-state__icon">✉️</div>
+              <p>Loading messages...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  
+  <script>
+    // Simple password protection (not secure, just a basic gate)
+    // For real security, use Firebase Authentication
+    const ADMIN_PASSWORD = 'elks15852026'; // Change this!
+
+    // DOM Elements
+    const loginScreen = document.getElementById('login-screen');
+    const adminDashboard = document.getElementById('admin-dashboard');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Check if already logged in
+    if (sessionStorage.getItem('elks-admin-auth') === 'true') {
+      loginScreen.classList.add('hidden');
+      adminDashboard.classList.remove('hidden');
+      initAdmin();
+    }
+
+    // Login handler
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const password = document.getElementById('admin-password').value;
+      
+      if (password === ADMIN_PASSWORD) {
+        sessionStorage.setItem('elks-admin-auth', 'true');
+        loginScreen.classList.add('hidden');
+        adminDashboard.classList.remove('hidden');
+        initAdmin();
+      } else {
+        loginError.style.display = 'block';
+      }
+    });
+
+    // Logout handler
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('elks-admin-auth');
+      location.reload();
+    });
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+      });
+    });
+
+    // Initialize admin dashboard
+    function initAdmin() {
+      loadEvents();
+      loadRecurringEvents();
+      loadInquiries();
+      loadMessages();
+    }
+
+    // Load and display events
+    async function loadEvents() {
+      const eventList = document.getElementById('event-list');
+      const pastEventList = document.getElementById('past-event-list');
+      const today = new Date().toISOString().split('T')[0];
+
+      try {
+        const snapshot = await db.collection('events').orderBy('date', 'asc').get();
+        const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        const upcoming = events.filter(e => e.date >= today);
+        const past = events.filter(e => e.date < today).reverse();
+
+        if (upcoming.length === 0) {
+          eventList.innerHTML = '<li class="empty-state"><div class="empty-state__icon">📅</div><p>No upcoming events</p></li>';
+        } else {
+          eventList.innerHTML = upcoming.map(event => renderEventItem(event)).join('');
+        }
+
+        if (past.length === 0) {
+          pastEventList.innerHTML = '<li class="empty-state"><div class="empty-state__icon">📅</div><p>No past events</p></li>';
+        } else {
+          pastEventList.innerHTML = past.slice(0, 10).map(event => renderEventItem(event, true)).join('');
+        }
+      } catch (error) {
+        console.error('Error loading events:', error);
+        eventList.innerHTML = '<li class="empty-state"><p>Error loading events</p></li>';
+      }
+    }
+
+    function renderEventItem(event, isPast = false) {
+      return `
+        <li class="event-item ${isPast ? 'event-item--past' : ''}">
+          <div class="event-item__info">
+            <div class="event-item__title">${event.emoji || '📅'} ${event.title}</div>
+            <div class="event-item__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''} • ${event.tag || 'Event'}</div>
+          </div>
+          <div class="event-item__actions">
+            <button class="btn btn--danger btn--small" onclick="deleteEvent('${event.id}')">Delete</button>
+          </div>
+        </li>
+      `;
+    }
+
+    // Add event
+    document.getElementById('add-event-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const eventData = {
+        title: document.getElementById('event-title').value,
+        date: document.getElementById('event-date').value,
+        time: document.getElementById('event-time').value,
+        tag: document.getElementById('event-tag').value,
+        emoji: document.getElementById('event-emoji').value || '📅',
+        image: document.getElementById('event-image').value,
+        description: document.getElementById('event-description').value
+      };
+
+      try {
+        await db.collection('events').add({
+          ...eventData,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        e.target.reset();
+        loadEvents();
+        alert('Event added successfully!');
+      } catch (error) {
+        console.error('Error adding event:', error);
+        alert('Error adding event. Please try again.');
+      }
+    });
+
+    // Delete event
+    async function deleteEvent(eventId) {
+      if (!confirm('Are you sure you want to delete this event?')) return;
+      
+      try {
+        await db.collection('events').doc(eventId).delete();
+        loadEvents();
+      } catch (error) {
+        console.error('Error deleting event:', error);
+        alert('Error deleting event. Please try again.');
+      }
+    }
+
+    // Load recurring events
+    async function loadRecurringEvents() {
+      const list = document.getElementById('recurring-list');
+      
+      try {
+        const snapshot = await db.collection('recurring-events').orderBy('sortOrder', 'asc').get();
+        const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        if (events.length === 0) {
+          list.innerHTML = '<li class="empty-state"><div class="empty-state__icon">🔄</div><p>No recurring events</p></li>';
+        } else {
+          list.innerHTML = events.map(event => `
+            <li class="event-item">
+              <div class="event-item__info">
+                <div class="event-item__title">${event.emoji || '📅'} ${event.title}</div>
+                <div class="event-item__meta">${event.schedule} • ${event.openToAll ? 'Open to All' : 'Members & Guests'}</div>
+              </div>
+              <div class="event-item__actions">
+                <button class="btn btn--danger btn--small" onclick="deleteRecurring('${event.id}')">Delete</button>
+              </div>
+            </li>
+          `).join('');
+        }
+      } catch (error) {
+        console.error('Error loading recurring events:', error);
+      }
+    }
+
+    // Add recurring event
+    document.getElementById('add-recurring-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const eventData = {
+        title: document.getElementById('recurring-title').value,
+        schedule: document.getElementById('recurring-schedule').value,
+        emoji: document.getElementById('recurring-emoji').value || '📅',
+        openToAll: document.getElementById('recurring-open').value === 'true',
+        description: document.getElementById('recurring-description').value,
+        sortOrder: parseInt(document.getElementById('recurring-sort').value) || 10
+      };
+
+      try {
+        await db.collection('recurring-events').add(eventData);
+        e.target.reset();
+        document.getElementById('recurring-sort').value = '10';
+        loadRecurringEvents();
+        alert('Recurring event added successfully!');
+      } catch (error) {
+        console.error('Error adding recurring event:', error);
+        alert('Error adding recurring event. Please try again.');
+      }
+    });
+
+    // Delete recurring event
+    async function deleteRecurring(eventId) {
+      if (!confirm('Are you sure you want to delete this recurring event?')) return;
+      
+      try {
+        await db.collection('recurring-events').doc(eventId).delete();
+        loadRecurringEvents();
+      } catch (error) {
+        console.error('Error deleting recurring event:', error);
+        alert('Error deleting recurring event. Please try again.');
+      }
+    }
+
+    // Load hall inquiries
+    async function loadInquiries() {
+      const list = document.getElementById('inquiries-list');
+      const countBadge = document.getElementById('inquiry-count');
+      
+      try {
+        const snapshot = await db.collection('hall-inquiries').orderBy('createdAt', 'desc').get();
+        const inquiries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        const newCount = inquiries.filter(i => i.status === 'new').length;
+        countBadge.textContent = newCount;
+        
+        if (inquiries.length === 0) {
+          list.innerHTML = '<div class="empty-state"><div class="empty-state__icon">📋</div><p>No inquiries yet</p></div>';
+        } else {
+          list.innerHTML = inquiries.map(inquiry => renderInquiry(inquiry)).join('');
+        }
+      } catch (error) {
+        console.error('Error loading inquiries:', error);
+      }
+    }
+
+    function renderInquiry(inquiry) {
+      const date = inquiry.createdAt ? inquiry.createdAt.toDate().toLocaleDateString() : 'Unknown';
+      const statusClass = `status-badge--${inquiry.status || 'new'}`;
+      
+      return `
+        <div class="inquiry-item ${inquiry.status === 'new' ? 'inquiry-item--new' : ''}">
+          <div class="inquiry-item__header">
+            <div>
+              <div class="inquiry-item__name">${inquiry.name}</div>
+              <div class="inquiry-item__date">Submitted: ${date}</div>
+            </div>
+            <span class="status-badge ${statusClass}">${inquiry.status || 'new'}</span>
+          </div>
+          <div class="inquiry-item__details">
+            <div><strong>Email:</strong> <a href="mailto:${inquiry.email}">${inquiry.email}</a></div>
+            <div><strong>Phone:</strong> ${inquiry.phone || 'Not provided'}</div>
+            <div><strong>Event Date:</strong> ${inquiry.eventDate || 'Not specified'}</div>
+            <div><strong>Event Type:</strong> ${inquiry.eventType || 'Not specified'}</div>
+            <div><strong>Guests:</strong> ${inquiry.guestCount || 'Not specified'}</div>
+          </div>
+          ${inquiry.message ? `<div class="inquiry-item__message">${inquiry.message}</div>` : ''}
+          <div class="inquiry-item__actions">
+            <button class="btn btn--small btn--ghost" onclick="updateInquiryStatus('${inquiry.id}', 'contacted')">Mark Contacted</button>
+            <button class="btn btn--small btn--ghost" onclick="updateInquiryStatus('${inquiry.id}', 'booked')">Mark Booked</button>
+            <button class="btn btn--small btn--ghost" onclick="updateInquiryStatus('${inquiry.id}', 'closed')">Close</button>
+            <button class="btn btn--small btn--danger" onclick="deleteInquiry('${inquiry.id}')">Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function updateInquiryStatus(id, status) {
+      try {
+        await db.collection('hall-inquiries').doc(id).update({ status });
+        loadInquiries();
+      } catch (error) {
+        console.error('Error updating inquiry:', error);
+      }
+    }
+
+    async function deleteInquiry(id) {
+      if (!confirm('Delete this inquiry?')) return;
+      try {
+        await db.collection('hall-inquiries').doc(id).delete();
+        loadInquiries();
+      } catch (error) {
+        console.error('Error deleting inquiry:', error);
+      }
+    }
+
+    // Load contact messages
+    async function loadMessages() {
+      const list = document.getElementById('messages-list');
+      const countBadge = document.getElementById('message-count');
+      
+      try {
+        const snapshot = await db.collection('contact-messages').orderBy('createdAt', 'desc').get();
+        const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        const newCount = messages.filter(m => m.status === 'new').length;
+        countBadge.textContent = newCount;
+        
+        if (messages.length === 0) {
+          list.innerHTML = '<div class="empty-state"><div class="empty-state__icon">✉️</div><p>No messages yet</p></div>';
+        } else {
+          list.innerHTML = messages.map(msg => renderMessage(msg)).join('');
+        }
+      } catch (error) {
+        console.error('Error loading messages:', error);
+      }
+    }
+
+    function renderMessage(msg) {
+      const date = msg.createdAt ? msg.createdAt.toDate().toLocaleDateString() : 'Unknown';
+      
+      return `
+        <div class="inquiry-item ${msg.status === 'new' ? 'inquiry-item--new' : ''}">
+          <div class="inquiry-item__header">
+            <div>
+              <div class="inquiry-item__name">${msg.name}</div>
+              <div class="inquiry-item__date">${date} • ${msg.subject || 'General'}</div>
+            </div>
+            <span class="status-badge status-badge--${msg.status || 'new'}">${msg.status || 'new'}</span>
+          </div>
+          <div class="inquiry-item__details">
+            <div><strong>Email:</strong> <a href="mailto:${msg.email}">${msg.email}</a></div>
+            <div><strong>Phone:</strong> ${msg.phone || 'Not provided'}</div>
+          </div>
+          <div class="inquiry-item__message">${msg.message}</div>
+          <div class="inquiry-item__actions">
+            <button class="btn btn--small btn--ghost" onclick="updateMessageStatus('${msg.id}', 'replied')">Mark Replied</button>
+            <button class="btn btn--small btn--danger" onclick="deleteMessage('${msg.id}')">Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function updateMessageStatus(id, status) {
+      try {
+        await db.collection('contact-messages').doc(id).update({ status });
+        loadMessages();
+      } catch (error) {
+        console.error('Error updating message:', error);
+      }
+    }
+
+    async function deleteMessage(id) {
+      if (!confirm('Delete this message?')) return;
+      try {
+        await db.collection('contact-messages').doc(id).delete();
+        loadMessages();
+      } catch (error) {
+        console.error('Error deleting message:', error);
+      }
+    }
+  </script>
+</body>
+</html>

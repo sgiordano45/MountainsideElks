@@ -123,8 +123,23 @@ const EventsManager = {
 
   // Render recurring event HTML (for events page)
   renderRecurringEvent(event) {
-    const tagClass = event.openToAll ? 'recurring-event__tag--open' : 'recurring-event__tag--members';
-    const tagText = event.openToAll ? 'Open to All' : 'Members & Guests';
+    // Determine access level and styling
+    let tagClass, tagText;
+    
+    if (event.accessLevel === 'open') {
+      tagClass = 'recurring-event__tag--open';
+      tagText = 'Open to All';
+    } else if (event.accessLevel === 'members') {
+      tagClass = 'recurring-event__tag--members-only';
+      tagText = 'Members Only';
+    } else if (event.accessLevel === 'guests') {
+      tagClass = 'recurring-event__tag--members';
+      tagText = 'Members & Guests';
+    } else {
+      // Fallback for old data using openToAll boolean
+      tagClass = event.openToAll ? 'recurring-event__tag--open' : 'recurring-event__tag--members';
+      tagText = event.openToAll ? 'Open to All' : 'Members & Guests';
+    }
     
     return `
       <div class="recurring-event">

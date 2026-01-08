@@ -442,10 +442,11 @@
                 <input type="text" id="recurring-emoji" placeholder="e.g., 🎤" maxlength="4">
               </div>
               <div class="form-group">
-                <label for="recurring-open">Open to Public?</label>
-                <select id="recurring-open">
-                  <option value="true">Yes - Open to All</option>
-                  <option value="false">No - Members & Guests</option>
+                <label for="recurring-access">Who Can Attend?</label>
+                <select id="recurring-access">
+                  <option value="open">Open to All</option>
+                  <option value="guests">Members & Guests</option>
+                  <option value="members">Members Only</option>
                 </select>
               </div>
             </div>
@@ -694,6 +695,16 @@
     async function loadRecurringEvents() {
       const list = document.getElementById('recurring-list');
       
+      // Helper to get access label
+      function getAccessLabel(event) {
+        if (event.accessLevel === 'open') return 'Open to All';
+        if (event.accessLevel === 'members') return 'Members Only';
+        if (event.accessLevel === 'guests') return 'Members & Guests';
+        // Fallback for old data
+        if (event.openToAll === true) return 'Open to All';
+        return 'Members & Guests';
+      }
+      
       try {
         const snapshot = await db.collection('recurring-events').orderBy('sortOrder', 'asc').get();
         const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -705,7 +716,7 @@
             <li class="event-item">
               <div class="event-item__info">
                 <div class="event-item__title">${event.emoji || '📅'} ${event.title}</div>
-                <div class="event-item__meta">${event.schedule} • ${event.openToAll ? 'Open to All' : 'Members & Guests'}</div>
+                <div class="event-item__meta">${event.schedule} • ${getAccessLabel(event)}</div>
               </div>
               <div class="event-item__actions">
                 <button class="btn btn--danger btn--small" onclick="deleteRecurring('${event.id}')">Delete</button>
@@ -726,7 +737,7 @@
         title: document.getElementById('recurring-title').value,
         schedule: document.getElementById('recurring-schedule').value,
         emoji: document.getElementById('recurring-emoji').value || '📅',
-        openToAll: document.getElementById('recurring-open').value === 'true',
+        accessLevel: document.getElementById('recurring-access').value,
         description: document.getElementById('recurring-description').value,
         sortOrder: parseInt(document.getElementById('recurring-sort').value) || 10
       };

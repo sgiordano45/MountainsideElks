@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Member Directory | Mountainside Elks Lodge #1585</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  
+  <style>
+    .portal-header {
+      background: var(--navy);
+      color: var(--white);
+      padding: var(--space-md) var(--space-xl);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .portal-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    .portal-header__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    .portal-header__brand img {
+      height: 36px;
+    }
+    .portal-nav {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .portal-nav__link {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-weight: 500;
+      padding: var(--space-xs) 0;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition-fast);
+    }
+    .portal-nav__link:hover,
+    .portal-nav__link--active {
+      color: var(--white);
+      border-bottom-color: var(--gold);
+    }
+    .portal-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+    }
+    .page-header {
+      margin-bottom: var(--space-xl);
+    }
+    .page-header__title {
+      font-size: 1.75rem;
+      margin-bottom: var(--space-sm);
+    }
+    .page-header__subtitle {
+      color: var(--gray-500);
+    }
+    .search-bar {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-xl);
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .search-bar__input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color var(--transition-fast);
+    }
+    .search-bar__input:focus {
+      outline: none;
+      border-color: var(--navy);
+    }
+    .search-bar__count {
+      color: var(--gray-500);
+      font-size: 0.9rem;
+    }
+    .directory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--space-lg);
+    }
+    .member-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      padding: var(--space-xl);
+      display: flex;
+      gap: var(--space-lg);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .member-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    .member-card__photo {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .member-card__photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .member-card__photo svg {
+      width: 32px;
+      height: 32px;
+      color: var(--gray-400);
+    }
+    .member-card__info {
+      flex: 1;
+      min-width: 0;
+    }
+    .member-card__name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+    .member-card__officer-badge {
+      background: var(--gold);
+      color: var(--navy-dark);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .member-card__since {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      margin-bottom: var(--space-sm);
+    }
+    .member-card__contact {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .member-card__contact-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 0.9rem;
+      color: var(--gray-600);
+    }
+    .member-card__contact-item svg {
+      width: 16px;
+      height: 16px;
+      color: var(--gray-400);
+      flex-shrink: 0;
+    }
+    .member-card__contact-item a {
+      color: var(--navy);
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .member-card__contact-item a:hover {
+      text-decoration: underline;
+    }
+    .officers-section {
+      margin-bottom: var(--space-2xl);
+    }
+    .officers-section__title {
+      font-size: 1.25rem;
+      margin-bottom: var(--space-lg);
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .officers-section__title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200);
+    }
+    .all-members-section__title {
+      font-size: 1.25rem;
+      margin-bottom: var(--space-lg);
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .all-members-section__title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200);
+    }
+    .empty-state {
+      text-align: center;
+      padding: var(--space-3xl);
+      color: var(--gray-500);
+    }
+    .empty-state__icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+    }
+    .loading-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-50);
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <p>Loading...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" class="hidden">
+    
+    <!-- Portal Header -->
+    <header class="portal-header">
+      <div class="portal-header__inner">
+        <div class="portal-header__brand">
+          <img src="../images/elks-logo.png" alt="Elks Logo" onerror="this.style.display='none'">
+          <span>🦌 Member Portal</span>
+        </div>
+        <nav class="portal-nav">
+          <a href="member-dashboard.html" class="portal-nav__link">Dashboard</a>
+          <a href="directory.html" class="portal-nav__link portal-nav__link--active">Directory</a>
+          <a href="documents.html" class="portal-nav__link">Documents</a>
+          <a href="profile.html" class="portal-nav__link">My Profile</a>
+          <a href="../index.html" class="portal-nav__link" style="color: var(--gray-400);">Main Site</a>
+          <button onclick="signOut()" class="btn btn--secondary btn--small">Logout</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Directory Content -->
+    <main class="portal-container">
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-header__title">Member Directory</h1>
+        <p class="page-header__subtitle">Find and connect with fellow lodge members</p>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <input type="text" id="search-input" class="search-bar__input" placeholder="Search by name...">
+        <span class="search-bar__count"><span id="member-count">0</span> members</span>
+      </div>
+
+      <!-- Officers Section -->
+      <div id="officers-section" class="officers-section hidden">
+        <h2 class="officers-section__title">Lodge Officers</h2>
+        <div id="officers-grid" class="directory-grid"></div>
+      </div>
+
+      <!-- All Members Section -->
+      <div id="members-section">
+        <h2 class="all-members-section__title">All Members</h2>
+        <div id="members-grid" class="directory-grid">
+          <div class="empty-state">
+            <div class="empty-state__icon">👥</div>
+            <p>Loading directory...</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  
+  <script>
+    const auth = firebase.auth();
+    let allMembers = [];
+    let currentUserId = null;
+
+    // Check auth state
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      currentUserId = user.uid;
+      
+      try {
+        const memberDoc = await db.collection('members').doc(user.uid).get();
+        
+        if (!memberDoc.exists || memberDoc.data().status !== 'active') {
+          window.location.href = 'login.html';
+          return;
+        }
+        
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('main-content').classList.remove('hidden');
+        
+        loadDirectory();
+        
+      } catch (error) {
+        console.error('Error:', error);
+        window.location.href = 'login.html';
+      }
+    });
+
+    async function loadDirectory() {
+      try {
+        const snapshot = await db.collection('members')
+          .where('status', '==', 'active')
+          .where('showInDirectory', '==', true)
+          .get();
+        
+        allMembers = snapshot.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+        
+        renderDirectory(allMembers);
+        
+      } catch (error) {
+        console.error('Error loading directory:', error);
+        document.getElementById('members-grid').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon">⚠️</div>
+            <p>Error loading directory. Please try again.</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderDirectory(members) {
+      const officersGrid = document.getElementById('officers-grid');
+      const membersGrid = document.getElementById('members-grid');
+      const officersSection = document.getElementById('officers-section');
+      const memberCount = document.getElementById('member-count');
+      
+      // Separate officers from regular members
+      const officers = members.filter(m => m.isOfficer && m.officerTitle);
+      const regularMembers = members;
+      
+      memberCount.textContent = members.length;
+      
+      // Render officers section
+      if (officers.length > 0) {
+        officersSection.classList.remove('hidden');
+        officersGrid.innerHTML = officers
+          .sort((a, b) => getOfficerSortOrder(a.officerTitle) - getOfficerSortOrder(b.officerTitle))
+          .map(m => renderMemberCard(m))
+          .join('');
+      } else {
+        officersSection.classList.add('hidden');
+      }
+      
+      // Render all members
+      if (regularMembers.length === 0) {
+        membersGrid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon">👥</div>
+            <p>No members found.</p>
+          </div>
+        `;
+      } else {
+        membersGrid.innerHTML = regularMembers.map(m => renderMemberCard(m)).join('');
+      }
+    }
+
+    function renderMemberCard(member) {
+      // Respect privacy settings
+      const showPhoto = member.sharePhoto && member.photoUrl;
+      const showEmail = member.shareEmail && member.email;
+      const showPhone = member.sharePhone && member.phone;
+      
+      const photoHtml = showPhoto 
+        ? `<img src="${member.photoUrl}" alt="${member.name}">`
+        : `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+           </svg>`;
+      
+      const officerBadge = member.isOfficer && member.officerTitle 
+        ? `<span class="member-card__officer-badge">${member.officerTitle}</span>` 
+        : '';
+      
+      const sinceHtml = member.memberSince 
+        ? `<div class="member-card__since">Member since ${member.memberSince}</div>` 
+        : '';
+      
+      let contactHtml = '';
+      
+      if (showEmail) {
+        contactHtml += `
+          <div class="member-card__contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+            <a href="mailto:${member.email}">${member.email}</a>
+          </div>
+        `;
+      }
+      
+      if (showPhone) {
+        contactHtml += `
+          <div class="member-card__contact-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            </svg>
+            <a href="tel:${member.phone}">${member.phone}</a>
+          </div>
+        `;
+      }
+      
+      if (!showEmail && !showPhone) {
+        contactHtml = `<div class="member-card__contact-item" style="color: var(--gray-400); font-style: italic;">Contact info not shared</div>`;
+      }
+      
+      return `
+        <div class="member-card">
+          <div class="member-card__photo">
+            ${photoHtml}
+          </div>
+          <div class="member-card__info">
+            <div class="member-card__name">
+              ${member.name}
+              ${officerBadge}
+            </div>
+            ${sinceHtml}
+            <div class="member-card__contact">
+              ${contactHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function getOfficerSortOrder(title) {
+      const order = {
+        'Exalted Ruler': 1,
+        'Leading Knight': 2,
+        'Loyal Knight': 3,
+        'Lecturing Knight': 4,
+        'Secretary': 5,
+        'Treasurer': 6,
+        'Esquire': 7,
+        'Inner Guard': 8,
+        'Tiler': 9,
+        'Chaplain': 10,
+        '1 Year Trustee': 11,
+        '2 Year Trustee': 12,
+        '3 Year Trustee': 13
+      };
+      return order[title] || 99;
+    }
+
+    // Search functionality
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      
+      if (!query) {
+        renderDirectory(allMembers);
+        return;
+      }
+      
+      const filtered = allMembers.filter(m => 
+        (m.name && m.name.toLowerCase().includes(query))
+      );
+      
+      renderDirectory(filtered);
+    });
+
+    function signOut() {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
+    }
+  </script>
+</body>
+</html>

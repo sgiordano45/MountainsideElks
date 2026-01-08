@@ -128,6 +128,7 @@
         <button class="tab" data-tab="recurring">Recurring</button>
         <button class="tab" data-tab="officers">Officers</button>
         <button class="tab" data-tab="members">Members <span class="tab-badge" id="pending-count">0</span></button>
+        <button class="tab" data-tab="documents">Documents</button>
         <button class="tab" data-tab="membership">Membership <span class="tab-badge" id="membership-count">0</span></button>
         <button class="tab" data-tab="inquiries">Hall <span class="tab-badge" id="inquiry-count">0</span></button>
         <button class="tab" data-tab="messages">Messages <span class="tab-badge" id="message-count">0</span></button>
@@ -349,6 +350,46 @@
         </div>
       </div>
 
+      <!-- Documents Tab -->
+      <div id="documents-tab" class="tab-content">
+        <div class="admin-card">
+          <h2>Upload Document</h2>
+          <form id="document-upload-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="doc-title">Document Title *</label>
+                <input type="text" id="doc-title" required placeholder="e.g., Lodge Bylaws 2024">
+              </div>
+              <div class="form-group">
+                <label for="doc-category">Category *</label>
+                <select id="doc-category" required>
+                  <option value="">Select category...</option>
+                  <option value="Governance">Governance</option>
+                  <option value="Minutes">Minutes</option>
+                  <option value="Forms">Forms</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>File *</label>
+              <div class="image-upload" id="doc-file-upload">
+                <input type="file" id="doc-file" required accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif">
+                <p>📄 Click to select file</p>
+                <p class="form-hint">PDF, Word, Excel, or image files. Max 10MB.</p>
+              </div>
+              <p id="doc-file-name" style="margin-top: var(--space-sm); font-weight: 600;"></p>
+              <p id="doc-upload-progress" class="upload-progress hidden"></p>
+            </div>
+            <button type="submit" class="btn btn--primary">Upload Document</button>
+          </form>
+        </div>
+        <div class="admin-card">
+          <h2>All Documents</h2>
+          <div id="documents-list"><div class="empty-state"><div class="empty-state__icon">📄</div><p>Loading...</p></div></div>
+        </div>
+      </div>
+
       <!-- Membership Tab -->
       <div id="membership-tab" class="tab-content">
         <div class="admin-card">
@@ -491,11 +532,13 @@
       loadRecurringEvents();
       loadOfficers();
       loadPortalMembers();
+      loadLodgeDocuments();
       loadMembershipInquiries();
       loadInquiries();
       loadMessages();
       initImageUploads();
       initMemberSearch();
+      initDocumentUpload();
     }
 
     // ==========================================
@@ -1117,6 +1160,150 @@
           ? '<div class="empty-state"><p>No members found</p></div>'
           : '<div class="member-grid">' + filtered.map(m => renderActiveMember(m)).join('') + '</div>';
       });
+    }
+
+    // ==========================================
+    // LODGE DOCUMENTS
+    // ==========================================
+    let selectedDocFile = null;
+
+    function initDocumentUpload() {
+      const uploadArea = document.getElementById('doc-file-upload');
+      const fileInput = document.getElementById('doc-file');
+      const fileName = document.getElementById('doc-file-name');
+      
+      if (!uploadArea) return;
+      
+      uploadArea.addEventListener('click', () => fileInput.click());
+      
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          if (file.size > 10 * 1024 * 1024) {
+            alert('File too large. Max 10MB.');
+            return;
+          }
+          selectedDocFile = file;
+          fileName.textContent = '📎 ' + file.name;
+        }
+      });
+    }
+
+    async function loadLodgeDocuments() {
+      const container = document.getElementById('documents-list');
+      
+      try {
+        const snapshot = await db.collection('documents').orderBy('uploadedAt', 'desc').get();
+        const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        if (docs.length === 0) {
+          container.innerHTML = '<div class="empty-state"><div class="empty-state__icon">📄</div><p>No documents uploaded yet</p></div>';
+          return;
+        }
+        
+        container.innerHTML = '<ul class="event-list">' + docs.map(d => renderDocumentItem(d)).join('') + '</ul>';
+        
+      } catch (e) {
+        console.error('Error loading documents:', e);
+        container.innerHTML = '<p>Error loading documents</p>';
+      }
+    }
+
+    function renderDocumentItem(doc) {
+      const date = doc.uploadedAt ? doc.uploadedAt.toDate().toLocaleDateString() : 'Unknown';
+      const icon = getDocIcon(doc.fileName);
+      
+      return `
+        <li class="event-item">
+          <div class="event-item__info">
+            <div class="event-item__title">${icon} ${doc.title}</div>
+            <div class="event-item__meta">${doc.category} • Uploaded ${date}</div>
+          </div>
+          <div class="event-item__actions">
+            <a href="${doc.fileUrl}" target="_blank" rel="noopener" class="btn btn--ghost btn--small">View</a>
+            <button class="btn btn--danger btn--small" onclick="deleteDocument('${doc.id}')">Delete</button>
+          </div>
+        </li>
+      `;
+    }
+
+    function getDocIcon(fileName) {
+      const ext = (fileName || '').split('.').pop().toLowerCase();
+      switch (ext) {
+        case 'pdf': return '📕';
+        case 'doc':
+        case 'docx': return '📘';
+        case 'xls':
+        case 'xlsx': return '📗';
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif': return '🖼️';
+        default: return '📄';
+      }
+    }
+
+    document.getElementById('document-upload-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (!selectedDocFile) {
+        alert('Please select a file to upload.');
+        return;
+      }
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const progressEl = document.getElementById('doc-upload-progress');
+      submitBtn.textContent = 'Uploading...';
+      submitBtn.disabled = true;
+      progressEl.textContent = 'Uploading file...';
+      progressEl.classList.remove('hidden');
+      
+      try {
+        // Upload to Firebase Storage
+        const timestamp = Date.now();
+        const safeName = selectedDocFile.name.replace(/[^a-zA-Z0-9.]/g, '_');
+        const path = `documents/${timestamp}_${safeName}`;
+        const ref = storage.ref(path);
+        const snapshot = await ref.put(selectedDocFile);
+        const fileUrl = await snapshot.ref.getDownloadURL();
+        
+        // Save to Firestore
+        await db.collection('documents').add({
+          title: document.getElementById('doc-title').value.trim(),
+          category: document.getElementById('doc-category').value,
+          fileName: selectedDocFile.name,
+          fileUrl: fileUrl,
+          uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Reset form
+        e.target.reset();
+        selectedDocFile = null;
+        document.getElementById('doc-file-name').textContent = '';
+        progressEl.classList.add('hidden');
+        
+        loadLodgeDocuments();
+        alert('Document uploaded!');
+        
+      } catch (error) {
+        console.error('Error uploading document:', error);
+        alert('Error uploading document: ' + error.message);
+      }
+      
+      submitBtn.textContent = 'Upload Document';
+      submitBtn.disabled = false;
+    });
+
+    async function deleteDocument(id) {
+      if (!confirm('Delete this document?')) return;
+      
+      try {
+        await db.collection('documents').doc(id).delete();
+        loadLodgeDocuments();
+      } catch (e) {
+        console.error('Error deleting document:', e);
+        alert('Error deleting document');
+      }
     }
 
     // ==========================================

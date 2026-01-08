@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Lodge Documents | Mountainside Elks Lodge #1585</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  
+  <style>
+    .portal-header {
+      background: var(--navy);
+      color: var(--white);
+      padding: var(--space-md) var(--space-xl);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .portal-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    .portal-header__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    .portal-header__brand img {
+      height: 36px;
+    }
+    .portal-nav {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .portal-nav__link {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-weight: 500;
+      padding: var(--space-xs) 0;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition-fast);
+    }
+    .portal-nav__link:hover,
+    .portal-nav__link--active {
+      color: var(--white);
+      border-bottom-color: var(--gold);
+    }
+    .portal-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+    }
+    .page-header {
+      margin-bottom: var(--space-xl);
+    }
+    .page-header__title {
+      font-size: 1.75rem;
+      margin-bottom: var(--space-sm);
+    }
+    .page-header__subtitle {
+      color: var(--gray-500);
+    }
+    .category-tabs {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xl);
+      flex-wrap: wrap;
+    }
+    .category-tab {
+      padding: var(--space-sm) var(--space-lg);
+      border: 2px solid var(--gray-200);
+      background: var(--white);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .category-tab:hover {
+      border-color: var(--navy);
+      color: var(--navy);
+    }
+    .category-tab.active {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: var(--white);
+    }
+    .documents-list {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .document-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      padding: var(--space-lg) var(--space-xl);
+      border-bottom: 1px solid var(--gray-100);
+      transition: background var(--transition-fast);
+    }
+    .document-item:last-child {
+      border-bottom: none;
+    }
+    .document-item:hover {
+      background: var(--gray-50);
+    }
+    .document-item__icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gray-100);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .document-item__icon--pdf { background: #fee2e2; }
+    .document-item__icon--doc { background: #dbeafe; }
+    .document-item__icon--xls { background: #d1fae5; }
+    .document-item__icon--img { background: #fef3c7; }
+    .document-item__info {
+      flex: 1;
+      min-width: 0;
+    }
+    .document-item__title {
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+      color: var(--navy);
+    }
+    .document-item__meta {
+      font-size: 0.8125rem;
+      color: var(--gray-500);
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+    .document-item__category {
+      background: var(--gray-100);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .document-item__actions {
+      flex-shrink: 0;
+    }
+    .empty-state {
+      text-align: center;
+      padding: var(--space-3xl);
+      color: var(--gray-500);
+    }
+    .empty-state__icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+    }
+    .loading-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-50);
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <p>Loading...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" class="hidden">
+    
+    <!-- Portal Header -->
+    <header class="portal-header">
+      <div class="portal-header__inner">
+        <div class="portal-header__brand">
+          <img src="../images/elks-logo.png" alt="Elks Logo" onerror="this.style.display='none'">
+          <span>🦌 Member Portal</span>
+        </div>
+        <nav class="portal-nav">
+          <a href="member-dashboard.html" class="portal-nav__link">Dashboard</a>
+          <a href="directory.html" class="portal-nav__link">Directory</a>
+          <a href="documents.html" class="portal-nav__link portal-nav__link--active">Documents</a>
+          <a href="profile.html" class="portal-nav__link">My Profile</a>
+          <a href="../index.html" class="portal-nav__link" style="color: var(--gray-400);">Main Site</a>
+          <button onclick="signOut()" class="btn btn--secondary btn--small">Logout</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Documents Content -->
+    <main class="portal-container">
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-header__title">Lodge Documents</h1>
+        <p class="page-header__subtitle">Access bylaws, meeting minutes, forms, and other lodge materials</p>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="category-tabs">
+        <button class="category-tab active" data-category="all">All Documents</button>
+        <button class="category-tab" data-category="Governance">Governance</button>
+        <button class="category-tab" data-category="Minutes">Minutes</button>
+        <button class="category-tab" data-category="Forms">Forms</button>
+        <button class="category-tab" data-category="Other">Other</button>
+      </div>
+
+      <!-- Documents List -->
+      <div class="documents-list" id="documents-list">
+        <div class="empty-state">
+          <div class="empty-state__icon">📄</div>
+          <p>Loading documents...</p>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  
+  <script>
+    const auth = firebase.auth();
+    let allDocuments = [];
+    let currentCategory = 'all';
+
+    // Check auth state
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      try {
+        const memberDoc = await db.collection('members').doc(user.uid).get();
+        
+        if (!memberDoc.exists || memberDoc.data().status !== 'active') {
+          window.location.href = 'login.html';
+          return;
+        }
+        
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('main-content').classList.remove('hidden');
+        
+        loadDocuments();
+        
+      } catch (error) {
+        console.error('Error:', error);
+        window.location.href = 'login.html';
+      }
+    });
+
+    async function loadDocuments() {
+      const container = document.getElementById('documents-list');
+      
+      try {
+        const snapshot = await db.collection('documents')
+          .orderBy('uploadedAt', 'desc')
+          .get();
+        
+        allDocuments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        renderDocuments();
+        
+      } catch (error) {
+        console.error('Error loading documents:', error);
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon">⚠️</div>
+            <p>Error loading documents. Please try again.</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderDocuments() {
+      const container = document.getElementById('documents-list');
+      
+      let filtered = allDocuments;
+      if (currentCategory !== 'all') {
+        filtered = allDocuments.filter(d => d.category === currentCategory);
+      }
+      
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon">📄</div>
+            <p>${currentCategory === 'all' ? 'No documents have been uploaded yet.' : `No documents in ${currentCategory} category.`}</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = filtered.map(doc => renderDocumentItem(doc)).join('');
+    }
+
+    function renderDocumentItem(doc) {
+      const icon = getFileIcon(doc.fileName || doc.title);
+      const iconClass = getFileIconClass(doc.fileName || doc.title);
+      const uploadDate = doc.uploadedAt ? doc.uploadedAt.toDate().toLocaleDateString() : 'Unknown';
+      
+      return `
+        <div class="document-item">
+          <div class="document-item__icon ${iconClass}">
+            ${icon}
+          </div>
+          <div class="document-item__info">
+            <div class="document-item__title">${doc.title}</div>
+            <div class="document-item__meta">
+              <span class="document-item__category">${doc.category}</span>
+              <span>Uploaded ${uploadDate}</span>
+            </div>
+          </div>
+          <div class="document-item__actions">
+            <a href="${doc.fileUrl}" target="_blank" rel="noopener" class="btn btn--primary btn--small">
+              Download
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    function getFileIcon(fileName) {
+      const ext = (fileName || '').split('.').pop().toLowerCase();
+      
+      switch (ext) {
+        case 'pdf': return '📕';
+        case 'doc':
+        case 'docx': return '📘';
+        case 'xls':
+        case 'xlsx': return '📗';
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif': return '🖼️';
+        default: return '📄';
+      }
+    }
+
+    function getFileIconClass(fileName) {
+      const ext = (fileName || '').split('.').pop().toLowerCase();
+      
+      switch (ext) {
+        case 'pdf': return 'document-item__icon--pdf';
+        case 'doc':
+        case 'docx': return 'document-item__icon--doc';
+        case 'xls':
+        case 'xlsx': return 'document-item__icon--xls';
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif': return 'document-item__icon--img';
+        default: return '';
+      }
+    }
+
+    // Category tab switching
+    document.querySelectorAll('.category-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentCategory = tab.dataset.category;
+        renderDocuments();
+      });
+    });
+
+    function signOut() {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
+    }
+  </script>
+</body>
+</html>

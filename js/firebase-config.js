@@ -3,14 +3,13 @@
 // Get these from: Firebase Console → Project Settings → General → Your apps → Web app
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBdeTwOouU5LeRDKRLoPQAvnjFsdvCTzyA",
+  authDomain: "mountainside-elks.firebaseapp.com",
+  projectId: "mountainside-elks",
+  storageBucket: "mountainside-elks.firebasestorage.app",
+  messagingSenderId: "1082426819820",
+  appId: "1:1082426819820:web:f4496a0eeeadc88da551c9"
 };
-
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 

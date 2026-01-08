@@ -403,7 +403,7 @@
                 Non-alcoholic options
               </li>
             </ul>
-            <a href="#inquiry-form" class="btn btn--outline" style="width: 100%;">Inquire</a>
+            <a href="#inquiry-form" class="btn btn--outline" style="width: 100%;" onclick="document.getElementById('bar-service').checked = true;">Inquire</a>
           </div>
         </div>
         
@@ -475,6 +475,17 @@
             <input type="number" id="guests" name="guest_count" min="1" max="100"
               style="width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 6px; font-size: 1rem; transition: border-color var(--transition-fast);"
               onfocus="this.style.borderColor='var(--navy)'" onblur="this.style.borderColor='var(--gray-200)'">
+          </div>
+          
+          <div style="margin-bottom: var(--space-lg);">
+            <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+              <input type="checkbox" id="bar-service" name="bar_service" 
+                style="width: 20px; height: 20px; accent-color: var(--navy);">
+              <span style="font-weight: 600;">I'm interested in bar service</span>
+            </label>
+            <p style="margin-top: var(--space-xs); margin-left: 28px; font-size: 0.875rem; color: var(--gray-500);">
+              Our licensed bartenders can provide full bar service for your event
+            </p>
           </div>
           
           <div style="margin-bottom: var(--space-xl);">

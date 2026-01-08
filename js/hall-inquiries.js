@@ -13,6 +13,7 @@ const HallInquiries = {
         eventDate: formData.eventDate || '',
         eventType: formData.eventType || '',
         guestCount: formData.guestCount || '',
+        barService: formData.barService || false,
         message: formData.message || '',
         status: 'new',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -104,6 +105,7 @@ const HallInquiries = {
         eventDate: form.querySelector('#event-date')?.value || '',
         eventType: form.querySelector('#event-type')?.value || '',
         guestCount: form.querySelector('#guests')?.value || '',
+        barService: form.querySelector('#bar-service')?.checked || false,
         message: form.querySelector('#message')?.value || ''
       };
 

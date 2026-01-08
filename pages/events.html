@@ -163,7 +163,7 @@
           </p>
         </div>
         
-        <div style="max-width: 800px; margin: 0 auto;">
+        <div id="recurring-events-list" style="max-width: 800px; margin: 0 auto;">
           <!-- Tuesday Dinners -->
           <div class="recurring-event">
             <div class="recurring-event__icon">🍽️</div>
@@ -233,43 +233,9 @@
           </p>
         </div>
         
-        <div class="grid grid--3">
-          <!-- Placeholder events - update with actual events -->
-          <article class="card">
-            <div class="card__image" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 4rem;">🏀</span>
-            </div>
-            <div class="card__body">
-              <span class="card__tag">Community Event</span>
-              <h3 class="card__title">Elks Hoop Shoot</h3>
-              <p class="card__text">Annual free-throw competition for local youth ages 8-13.</p>
-              <p class="card__meta">Date TBD • Open to All</p>
-            </div>
-          </article>
-          
-          <article class="card">
-            <div class="card__image" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 4rem;">☘️</span>
-            </div>
-            <div class="card__body">
-              <span class="card__tag">Annual Event</span>
-              <h3 class="card__title">St. Patrick's Day Celebration</h3>
-              <p class="card__text">Traditional corned beef dinner with all the fixings and live entertainment.</p>
-              <p class="card__meta">March 2026 • Open to All</p>
-            </div>
-          </article>
-          
-          <article class="card">
-            <div class="card__image" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 4rem;">🥩</span>
-            </div>
-            <div class="card__body">
-              <span class="card__tag">Fundraiser</span>
-              <h3 class="card__title">Annual Beefsteak Dinner</h3>
-              <p class="card__text">Our biggest fundraiser of the year! All-you-can-eat beefsteak dinner.</p>
-              <p class="card__meta">Spring 2026 • Open to All</p>
-            </div>
-          </article>
+        <div id="upcoming-events-grid" class="grid grid--3">
+          <!-- Events loaded from Firebase -->
+          <p class="text-center" style="grid-column: 1/-1; color: var(--gray-500);">Loading events...</p>
         </div>
         
         <p class="text-center mt-3" style="color: var(--gray-500);">
@@ -397,6 +363,19 @@
     </div>
   </footer>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/events.js"></script>
+  
   <script src="../js/main.js"></script>
+  
+  <script>
+    // Load events from Firebase
+    document.addEventListener('DOMContentLoaded', function() {
+      EventsManager.loadEventsPage('recurring-events-list', 'upcoming-events-grid');
+    });
+  </script>
 </body>
 </html>

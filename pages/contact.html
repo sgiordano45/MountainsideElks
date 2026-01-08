@@ -254,8 +254,8 @@
           </p>
         </div>
         
-        <!-- Replace action URL with your form handler (Formspree, etc.) -->
-        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" style="max-width: 600px; margin: 0 auto;">
+        <!-- Form submits to Firebase -->
+        <form id="contact-form" style="max-width: 600px; margin: 0 auto;">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);">
             <div>
               <label for="name" style="display: block; font-weight: 600; margin-bottom: var(--space-sm);">Name *</label>
@@ -370,6 +370,19 @@
     </div>
   </footer>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/hall-inquiries.js"></script>
+  
   <script src="../js/main.js"></script>
+  
+  <script>
+    // Initialize contact form
+    document.addEventListener('DOMContentLoaded', function() {
+      ContactForm.initFormHandler('contact-form');
+    });
+  </script>
 </body>
 </html>

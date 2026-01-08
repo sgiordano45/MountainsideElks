@@ -12,33 +12,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="icon" type="image/png" href="../images/favicon.png">
-  
-  <style>
-    .officers-list {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-sm) var(--space-xl);
-      list-style: none;
-      max-width: 600px;
-      margin: var(--space-xl) auto 0;
-    }
-    @media (max-width: 500px) {
-      .officers-list {
-        grid-template-columns: 1fr;
-      }
-    }
-    .officers-list li {
-      padding: var(--space-sm) 0;
-      border-bottom: 1px solid var(--gray-100);
-    }
-    .officers-list strong {
-      color: var(--navy);
-    }
-    .officers-list span {
-      color: var(--gray-500);
-      font-size: 0.9375rem;
-    }
-  </style>
 </head>
 <body>
   
@@ -150,66 +123,54 @@
           </p>
         </div>
         
-        <!-- Featured Officers -->
         <div class="grid grid--3">
-          <!-- Exalted Ruler -->
+          <!-- Officer cards - update with actual names -->
           <div class="card" style="text-align: center;">
             <div style="padding: var(--space-xl); background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);">
-              <div style="width: 120px; height: 120px; background: var(--gray-200); border-radius: 50%; margin: 0 auto; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                <img src="../images/officer-cozzali.jpg" alt="John Cozzali" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\' stroke-width=\'1\' style=\'width: 50px; height: 50px; color: var(--gray-400);\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z\' /></svg>'">
+              <div style="width: 100px; height: 100px; background: var(--gray-200); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" style="width: 50px; height: 50px; color: var(--gray-400);">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
               </div>
             </div>
             <div class="card__body">
-              <h3 class="card__title" style="margin-bottom: var(--space-xs);">John Cozzali</h3>
+              <h3 class="card__title" style="margin-bottom: var(--space-xs);">[Exalted Ruler Name]</h3>
               <p class="card__tag">Exalted Ruler</p>
             </div>
           </div>
           
-          <!-- Leading Knight -->
           <div class="card" style="text-align: center;">
             <div style="padding: var(--space-xl); background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);">
-              <div style="width: 120px; height: 120px; background: var(--gray-200); border-radius: 50%; margin: 0 auto; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                <img src="../images/officer-mancuso.jpg" alt="AJ Mancuso" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\' stroke-width=\'1\' style=\'width: 50px; height: 50px; color: var(--gray-400);\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z\' /></svg>'">
+              <div style="width: 100px; height: 100px; background: var(--gray-200); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" style="width: 50px; height: 50px; color: var(--gray-400);">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
               </div>
             </div>
             <div class="card__body">
-              <h3 class="card__title" style="margin-bottom: var(--space-xs);">AJ Mancuso</h3>
+              <h3 class="card__title" style="margin-bottom: var(--space-xs);">[Leading Knight Name]</h3>
               <p class="card__tag">Leading Knight</p>
             </div>
           </div>
           
-          <!-- Secretary -->
           <div class="card" style="text-align: center;">
             <div style="padding: var(--space-xl); background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);">
-              <div style="width: 120px; height: 120px; background: var(--gray-200); border-radius: 50%; margin: 0 auto; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                <img src="../images/officer-plesh.jpg" alt="Lisa Plesh" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\' stroke-width=\'1\' style=\'width: 50px; height: 50px; color: var(--gray-400);\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z\' /></svg>'">
+              <div style="width: 100px; height: 100px; background: var(--gray-200); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1" style="width: 50px; height: 50px; color: var(--gray-400);">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
               </div>
             </div>
             <div class="card__body">
-              <h3 class="card__title" style="margin-bottom: var(--space-xs);">Lisa Plesh</h3>
+              <h3 class="card__title" style="margin-bottom: var(--space-xs);">[Secretary Name]</h3>
               <p class="card__tag">Secretary</p>
             </div>
           </div>
         </div>
         
-        <!-- All Officers List -->
-        <div style="text-align: center; margin-top: var(--space-3xl);">
-          <h3 style="margin-bottom: var(--space-md);">All Lodge Officers</h3>
-          <ul class="officers-list">
-            <li><strong>John Cozzali</strong><br><span>Exalted Ruler</span></li>
-            <li><strong>AJ Mancuso</strong><br><span>Leading Knight</span></li>
-            <li><strong>Mark Gioioso</strong><br><span>Loyal Knight</span></li>
-            <li><strong>Jim Alder</strong><br><span>Lecturing Knight</span></li>
-            <li><strong>Lisa Plesh</strong><br><span>Secretary</span></li>
-            <li><strong>Steve Matejek</strong><br><span>Treasurer</span></li>
-            <li><strong>Mike Kukan</strong><br><span>Inner Guard</span></li>
-            <li><strong>Glenn Persaud</strong><br><span>Tiler</span></li>
-            <li><strong>Coady Brown</strong><br><span>Chaplain</span></li>
-            <li><strong>Frank Kelly</strong><br><span>1 Year Trustee</span></li>
-            <li><strong>Carlos Santos</strong><br><span>2 Year Trustee</span></li>
-            <li><strong>Paul Mirabelli</strong><br><span>3 Year Trustee</span></li>
-          </ul>
-        </div>
+        <p class="text-center mt-2" style="color: var(--gray-500); font-style: italic;">
+          Leadership photos and names to be updated
+        </p>
       </div>
     </section>
 

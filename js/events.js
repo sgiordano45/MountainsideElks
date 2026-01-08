@@ -3,7 +3,6 @@
 
 const EventsManager = {
   
-  // Fetch upcoming events (not past, sorted by date)
   async getUpcomingEvents(limit = 10) {
     try {
       const today = new Date().toISOString().split('T')[0];
@@ -12,100 +11,34 @@ const EventsManager = {
         .orderBy('date', 'asc')
         .limit(limit)
         .get();
-      
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     } catch (error) {
       console.error('Error fetching events:', error);
       return [];
     }
   },
 
-  // Fetch recurring events (events marked as recurring)
   async getRecurringEvents() {
     try {
       const snapshot = await db.collection('recurring-events')
         .orderBy('sortOrder', 'asc')
         .get();
-      
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     } catch (error) {
       console.error('Error fetching recurring events:', error);
       return [];
     }
   },
 
-  // Fetch all events (for admin)
-  async getAllEvents() {
-    try {
-      const snapshot = await db.collection('events')
-        .orderBy('date', 'desc')
-        .get();
-      
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-    } catch (error) {
-      console.error('Error fetching all events:', error);
-      return [];
-    }
-  },
-
-  // Add new event
-  async addEvent(eventData) {
-    try {
-      const docRef = await db.collection('events').add({
-        ...eventData,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      return { success: true, id: docRef.id };
-    } catch (error) {
-      console.error('Error adding event:', error);
-      return { success: false, error: error.message };
-    }
-  },
-
-  // Update event
-  async updateEvent(eventId, eventData) {
-    try {
-      await db.collection('events').doc(eventId).update({
-        ...eventData,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      return { success: true };
-    } catch (error) {
-      console.error('Error updating event:', error);
-      return { success: false, error: error.message };
-    }
-  },
-
-  // Delete event
-  async deleteEvent(eventId) {
-    try {
-      await db.collection('events').doc(eventId).delete();
-      return { success: true };
-    } catch (error) {
-      console.error('Error deleting event:', error);
-      return { success: false, error: error.message };
-    }
-  },
-
-  // Render event card HTML (for homepage)
   renderEventCard(event) {
-    const imageUrl = event.image ? `images/${event.image}` : '';
-    const fallbackStyle = "this.parentElement.style.background='linear-gradient(135deg, #1a365d 0%, #2c5282 100%)'";
+    const hasDetails = event.details || event.flyerUrl || event.price || event.rsvpUrl;
+    const clickAttr = hasDetails ? `onclick="EventsManager.showEventModal('${event.id}')" style="cursor:pointer;"` : '';
     
     return `
-      <article class="card">
+      <article class="card" ${clickAttr} data-event-id="${event.id}">
         <div class="card__image">
-          ${imageUrl 
-            ? `<img src="${imageUrl}" alt="${event.title}" onerror="${fallbackStyle}">`
+          ${event.flyerUrl 
+            ? `<img src="${event.flyerUrl}" alt="${event.title}">`
             : `<div style="width:100%;height:100%;background:linear-gradient(135deg, #1a365d 0%, #2c5282 100%);display:flex;align-items:center;justify-content:center;">
                 <span style="font-size:3rem;">${event.emoji || '📅'}</span>
                </div>`
@@ -116,30 +49,15 @@ const EventsManager = {
           <h3 class="card__title">${event.title}</h3>
           <p class="card__text">${event.description}</p>
           <p class="card__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''}</p>
+          ${hasDetails ? '<p style="font-size:0.8rem;color:var(--gold-dark);margin-top:var(--space-sm);">Click for details →</p>' : ''}
         </div>
       </article>
     `;
   },
 
-  // Render recurring event HTML (for events page)
   renderRecurringEvent(event) {
-    // Determine access level and styling
-    let tagClass, tagText;
-    
-    if (event.accessLevel === 'open') {
-      tagClass = 'recurring-event__tag--open';
-      tagText = 'Open to All';
-    } else if (event.accessLevel === 'members') {
-      tagClass = 'recurring-event__tag--members-only';
-      tagText = 'Members Only';
-    } else if (event.accessLevel === 'guests') {
-      tagClass = 'recurring-event__tag--members';
-      tagText = 'Members & Guests';
-    } else {
-      // Fallback for old data using openToAll boolean
-      tagClass = event.openToAll ? 'recurring-event__tag--open' : 'recurring-event__tag--members';
-      tagText = event.openToAll ? 'Open to All' : 'Members & Guests';
-    }
+    const tagClass = event.openToAll ? 'recurring-event__tag--open' : 'recurring-event__tag--members';
+    const tagText = event.openToAll ? 'Open to All' : 'Members & Guests';
     
     return `
       <div class="recurring-event">
@@ -154,30 +72,105 @@ const EventsManager = {
     `;
   },
 
-  // Render special event card (for events page)
   renderSpecialEventCard(event) {
+    const hasDetails = event.details || event.flyerUrl || event.price || event.rsvpUrl;
+    const clickAttr = hasDetails ? `onclick="EventsManager.showEventModal('${event.id}')" style="cursor:pointer;"` : '';
+    
     return `
-      <article class="card">
-        <div class="card__image" style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); display: flex; align-items: center; justify-content: center;">
-          <span style="font-size: 4rem;">${event.emoji || '📅'}</span>
+      <article class="card" ${clickAttr} data-event-id="${event.id}">
+        <div class="card__image">
+          ${event.flyerUrl 
+            ? `<img src="${event.flyerUrl}" alt="${event.title}">`
+            : `<div style="width:100%;height:100%;background:linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:4rem;">${event.emoji || '📅'}</span>
+               </div>`
+          }
         </div>
         <div class="card__body">
           <span class="card__tag">${event.tag || 'Event'}</span>
           <h3 class="card__title">${event.title}</h3>
           <p class="card__text">${event.description}</p>
           <p class="card__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''}</p>
+          ${hasDetails ? '<p style="font-size:0.8rem;color:var(--gold-dark);margin-top:var(--space-sm);">Click for details →</p>' : ''}
         </div>
       </article>
     `;
   },
 
-  // Load and display events on homepage
+  async showEventModal(eventId) {
+    try {
+      const doc = await db.collection('events').doc(eventId).get();
+      if (!doc.exists) return;
+      
+      const event = doc.data();
+      
+      let modal = document.getElementById('event-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'event-modal';
+        modal.innerHTML = `
+          <div class="event-modal__backdrop" onclick="EventsManager.closeEventModal()"></div>
+          <div class="event-modal__content">
+            <button class="event-modal__close" onclick="EventsManager.closeEventModal()">&times;</button>
+            <div class="event-modal__body"></div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        
+        const style = document.createElement('style');
+        style.textContent = `
+          #event-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; }
+          #event-modal.active { display: flex; align-items: center; justify-content: center; padding: 1rem; }
+          .event-modal__backdrop { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); }
+          .event-modal__content { position: relative; background: white; border-radius: 12px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
+          .event-modal__close { position: absolute; top: 0.5rem; right: 1rem; background: none; border: none; font-size: 2rem; cursor: pointer; color: #718096; z-index: 1; line-height: 1; }
+          .event-modal__close:hover { color: #1a365d; }
+          .event-modal__body { padding: 2rem; }
+          .event-modal__flyer { width: 100%; border-radius: 8px; margin-bottom: 1.5rem; }
+          .event-modal__title { font-size: 1.5rem; margin-bottom: 0.5rem; color: #1a365d; }
+          .event-modal__meta { color: #718096; margin-bottom: 1rem; }
+          .event-modal__tag { display: inline-block; background: #1a365d; color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem; margin-bottom: 1rem; }
+          .event-modal__price { font-size: 1.25rem; font-weight: 600; color: #b7791f; margin-bottom: 1rem; }
+          .event-modal__description { margin-bottom: 1rem; line-height: 1.6; }
+          .event-modal__details { background: #f7fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; white-space: pre-line; line-height: 1.6; }
+          .event-modal__rsvp { display: inline-block; background: #d69e2e; color: #1a365d; padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; text-decoration: none; }
+          .event-modal__rsvp:hover { background: #b7791f; color: white; }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      const body = modal.querySelector('.event-modal__body');
+      body.innerHTML = `
+        ${event.flyerUrl ? `<img src="${event.flyerUrl}" alt="${event.title}" class="event-modal__flyer">` : ''}
+        <span class="event-modal__tag">${event.tag || 'Event'}</span>
+        <h2 class="event-modal__title">${event.emoji || '📅'} ${event.title}</h2>
+        <p class="event-modal__meta">${formatDate(event.date)}${event.time ? ' • ' + event.time : ''}</p>
+        ${event.price ? `<p class="event-modal__price">${event.price}</p>` : ''}
+        <p class="event-modal__description">${event.description}</p>
+        ${event.details ? `<div class="event-modal__details">${event.details}</div>` : ''}
+        ${event.rsvpUrl ? `<a href="${event.rsvpUrl}" target="_blank" rel="noopener" class="event-modal__rsvp">RSVP / Get Tickets</a>` : ''}
+      `;
+      
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    } catch (error) {
+      console.error('Error loading event details:', error);
+    }
+  },
+
+  closeEventModal() {
+    const modal = document.getElementById('event-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  },
+
   async loadHomepageEvents(containerId, limit = 3) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
     container.innerHTML = '<p class="text-center">Loading events...</p>';
-
     const events = await this.getUpcomingEvents(limit);
     
     if (events.length === 0) {
@@ -188,9 +181,7 @@ const EventsManager = {
     container.innerHTML = events.map(event => this.renderEventCard(event)).join('');
   },
 
-  // Load and display events on events page
   async loadEventsPage(recurringContainerId, upcomingContainerId) {
-    // Load recurring events
     const recurringContainer = document.getElementById(recurringContainerId);
     if (recurringContainer) {
       const recurringEvents = await this.getRecurringEvents();
@@ -199,11 +190,9 @@ const EventsManager = {
       }
     }
 
-    // Load upcoming special events
     const upcomingContainer = document.getElementById(upcomingContainerId);
     if (upcomingContainer) {
       upcomingContainer.innerHTML = '<p class="text-center">Loading events...</p>';
-      
       const events = await this.getUpcomingEvents(6);
       
       if (events.length === 0) {
@@ -215,3 +204,7 @@ const EventsManager = {
     }
   }
 };
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') EventsManager.closeEventModal();
+});

@@ -12,352 +12,75 @@
   <link rel="stylesheet" href="css/styles.css">
   
   <style>
-    .admin-container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: var(--space-xl);
-    }
-    
-    /* Login Screen */
-    .login-screen {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--gray-50);
-    }
-    .login-box {
-      background: var(--white);
-      padding: var(--space-2xl);
-      border-radius: 12px;
-      box-shadow: var(--shadow-lg);
-      width: 100%;
-      max-width: 400px;
-    }
-    .login-box h1 {
-      font-size: 1.5rem;
-      margin-bottom: var(--space-xl);
-      text-align: center;
-    }
-    
-    /* Admin Header */
-    .admin-header {
-      background: var(--navy);
-      color: var(--white);
-      padding: var(--space-lg) var(--space-xl);
-      margin-bottom: var(--space-xl);
-    }
-    .admin-header__inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .admin-header h1 {
-      font-size: 1.25rem;
-      color: var(--white);
-    }
-    
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-xl);
-      border-bottom: 2px solid var(--gray-200);
-      padding-bottom: var(--space-sm);
-    }
-    .tab {
-      padding: var(--space-sm) var(--space-lg);
-      border: none;
-      background: none;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--gray-500);
-      cursor: pointer;
-      border-radius: 6px 6px 0 0;
-      transition: all var(--transition-fast);
-    }
-    .tab:hover {
-      color: var(--navy);
-      background: var(--gray-50);
-    }
-    .tab.active {
-      color: var(--navy);
-      background: var(--gray-100);
-    }
-    .tab-badge {
-      background: var(--gold);
-      color: var(--navy-dark);
-      font-size: 0.75rem;
-      padding: 2px 6px;
-      border-radius: 10px;
-      margin-left: var(--space-xs);
-    }
-    
-    /* Tab Content */
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    
-    /* Cards & Tables */
-    .admin-card {
-      background: var(--white);
-      border-radius: 12px;
-      box-shadow: var(--shadow-md);
-      padding: var(--space-xl);
-      margin-bottom: var(--space-xl);
-    }
-    .admin-card h2 {
-      font-size: 1.25rem;
-      margin-bottom: var(--space-lg);
-      padding-bottom: var(--space-md);
-      border-bottom: 1px solid var(--gray-100);
-    }
-    
-    /* Form Styles */
-    .form-group {
-      margin-bottom: var(--space-lg);
-    }
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: var(--space-sm);
-    }
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 2px solid var(--gray-200);
-      border-radius: 6px;
-      font-size: 1rem;
-      font-family: inherit;
-      transition: border-color var(--transition-fast);
-    }
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--navy);
-    }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-lg);
-    }
-    @media (max-width: 600px) {
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    /* Event List */
-    .event-list {
-      list-style: none;
-    }
-    .event-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--space-md);
-      border-bottom: 1px solid var(--gray-100);
-      gap: var(--space-md);
-    }
-    .event-item:last-child {
-      border-bottom: none;
-    }
-    .event-item__info {
-      flex: 1;
-    }
-    .event-item__title {
-      font-weight: 600;
-      margin-bottom: var(--space-xs);
-    }
-    .event-item__meta {
-      font-size: 0.875rem;
-      color: var(--gray-500);
-    }
-    .event-item__actions {
-      display: flex;
-      gap: var(--space-sm);
-    }
-    .event-item--past {
-      opacity: 0.5;
-    }
-    
-    /* Inquiry List */
-    .inquiry-item {
-      padding: var(--space-lg);
-      border: 1px solid var(--gray-200);
-      border-radius: 8px;
-      margin-bottom: var(--space-md);
-    }
-    .inquiry-item--new {
-      border-left: 4px solid var(--gold);
-      background: rgba(212, 160, 18, 0.05);
-    }
-    .inquiry-item__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: var(--space-md);
-    }
-    .inquiry-item__name {
-      font-weight: 600;
-      font-size: 1.125rem;
-    }
-    .inquiry-item__date {
-      font-size: 0.875rem;
-      color: var(--gray-500);
-    }
-    .inquiry-item__details {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: var(--space-sm);
-      margin-bottom: var(--space-md);
-      font-size: 0.9375rem;
-    }
-    .inquiry-item__details strong {
-      color: var(--gray-500);
-      font-weight: 400;
-    }
-    .inquiry-item__message {
-      background: var(--gray-50);
-      padding: var(--space-md);
-      border-radius: 6px;
-      margin-bottom: var(--space-md);
-    }
-    .inquiry-item__actions {
-      display: flex;
-      gap: var(--space-sm);
-    }
-    
-    /* Status Badge */
-    .status-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .status-badge--new {
-      background: var(--gold);
-      color: var(--navy-dark);
-    }
-    .status-badge--contacted {
-      background: #3182ce;
-      color: white;
-    }
-    .status-badge--booked {
-      background: #38a169;
-      color: white;
-    }
-    .status-badge--closed {
-      background: var(--gray-400);
-      color: white;
-    }
-    
-    /* Buttons */
-    .btn--small {
-      padding: 0.5rem 1rem;
-      font-size: 0.875rem;
-    }
-    .btn--danger {
-      background: #e53e3e;
-      border-color: #e53e3e;
-      color: white;
-    }
-    .btn--danger:hover {
-      background: #c53030;
-      border-color: #c53030;
-      color: white;
-    }
-    .btn--ghost {
-      background: transparent;
-      border: 1px solid var(--gray-300);
-      color: var(--gray-600);
-    }
-    .btn--ghost:hover {
-      background: var(--gray-50);
-      color: var(--gray-700);
-    }
-    
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: var(--space-3xl);
-      color: var(--gray-500);
-    }
-    .empty-state__icon {
-      font-size: 3rem;
-      margin-bottom: var(--space-md);
-    }
-    
-    /* Modal */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal__backdrop {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-    }
-    .modal__content {
-      position: relative;
-      background: var(--white);
-      border-radius: 12px;
-      padding: var(--space-xl);
-      width: 90%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: var(--shadow-lg);
-    }
-    .modal__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: var(--space-xl);
-      padding-bottom: var(--space-md);
-      border-bottom: 1px solid var(--gray-100);
-    }
-    .modal__header h2 {
-      margin: 0;
-      font-size: 1.25rem;
-    }
-    .modal__close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--gray-500);
-      padding: 0;
-      line-height: 1;
-    }
-    .modal__close:hover {
-      color: var(--gray-700);
-    }
-    
-    /* Hidden */
-    .hidden {
-      display: none !important;
-    }
+    .admin-container { max-width: 1000px; margin: 0 auto; padding: var(--space-xl); }
+    .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--gray-50); }
+    .login-box { background: var(--white); padding: var(--space-2xl); border-radius: 12px; box-shadow: var(--shadow-lg); width: 100%; max-width: 400px; }
+    .login-box h1 { font-size: 1.5rem; margin-bottom: var(--space-xl); text-align: center; }
+    .admin-header { background: var(--navy); color: var(--white); padding: var(--space-lg) var(--space-xl); margin-bottom: var(--space-xl); }
+    .admin-header__inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-md); }
+    .admin-header h1 { font-size: 1.25rem; color: var(--white); }
+    .tabs { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-bottom: var(--space-xl); border-bottom: 2px solid var(--gray-200); padding-bottom: var(--space-sm); }
+    .tab { padding: var(--space-sm) var(--space-lg); border: none; background: none; font-size: 0.9rem; font-weight: 600; color: var(--gray-500); cursor: pointer; border-radius: 6px 6px 0 0; transition: all var(--transition-fast); }
+    .tab:hover { color: var(--navy); background: var(--gray-50); }
+    .tab.active { color: var(--navy); background: var(--gray-100); }
+    .tab-badge { background: var(--gold); color: var(--navy-dark); font-size: 0.75rem; padding: 2px 6px; border-radius: 10px; margin-left: var(--space-xs); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .admin-card { background: var(--white); border-radius: 12px; box-shadow: var(--shadow-md); padding: var(--space-xl); margin-bottom: var(--space-xl); }
+    .admin-card h2 { font-size: 1.25rem; margin-bottom: var(--space-lg); padding-bottom: var(--space-md); border-bottom: 1px solid var(--gray-100); }
+    .form-group { margin-bottom: var(--space-lg); }
+    .form-group label { display: block; font-weight: 600; margin-bottom: var(--space-sm); }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 6px; font-size: 1rem; font-family: inherit; transition: border-color var(--transition-fast); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--navy); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-hint { font-size: 0.8125rem; color: var(--gray-500); margin-top: var(--space-xs); }
+    .event-list { list-style: none; }
+    .event-item { display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); border-bottom: 1px solid var(--gray-100); gap: var(--space-md); flex-wrap: wrap; }
+    .event-item:last-child { border-bottom: none; }
+    .event-item__info { flex: 1; min-width: 200px; }
+    .event-item__title { font-weight: 600; margin-bottom: var(--space-xs); }
+    .event-item__meta { font-size: 0.875rem; color: var(--gray-500); }
+    .event-item__actions { display: flex; gap: var(--space-sm); }
+    .event-item--past { opacity: 0.5; }
+    .officer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-lg); }
+    .officer-card { background: var(--gray-50); border-radius: 8px; padding: var(--space-lg); text-align: center; }
+    .officer-card__photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto var(--space-md); background: var(--gray-200); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .officer-card__photo img { width: 100%; height: 100%; object-fit: cover; }
+    .officer-card__photo svg { width: 32px; height: 32px; color: var(--gray-400); }
+    .officer-card__name { font-weight: 600; margin-bottom: var(--space-xs); font-size: 0.9rem; }
+    .officer-card__title { font-size: 0.8rem; color: var(--gray-500); margin-bottom: var(--space-md); }
+    .inquiry-item { padding: var(--space-lg); border: 1px solid var(--gray-200); border-radius: 8px; margin-bottom: var(--space-md); }
+    .inquiry-item--new { border-left: 4px solid var(--gold); background: rgba(212, 160, 18, 0.05); }
+    .inquiry-item__header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-md); flex-wrap: wrap; gap: var(--space-sm); }
+    .inquiry-item__name { font-weight: 600; font-size: 1.125rem; }
+    .inquiry-item__date { font-size: 0.875rem; color: var(--gray-500); }
+    .inquiry-item__details { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md); font-size: 0.9rem; }
+    .inquiry-item__details strong { color: var(--gray-500); font-weight: 400; }
+    .inquiry-item__message { background: var(--gray-50); padding: var(--space-md); border-radius: 6px; margin-bottom: var(--space-md); }
+    .inquiry-item__actions { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+    .status-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+    .status-badge--new { background: var(--gold); color: var(--navy-dark); }
+    .status-badge--contacted { background: #3182ce; color: white; }
+    .status-badge--booked { background: #38a169; color: white; }
+    .status-badge--closed, .status-badge--replied { background: var(--gray-400); color: white; }
+    .btn--small { padding: 0.5rem 1rem; font-size: 0.875rem; }
+    .btn--danger { background: #e53e3e; border-color: #e53e3e; color: white; }
+    .btn--danger:hover { background: #c53030; border-color: #c53030; color: white; }
+    .btn--ghost { background: transparent; border: 1px solid var(--gray-300); color: var(--gray-600); }
+    .btn--ghost:hover { background: var(--gray-50); color: var(--gray-700); }
+    .empty-state { text-align: center; padding: var(--space-3xl); color: var(--gray-500); }
+    .empty-state__icon { font-size: 3rem; margin-bottom: var(--space-md); }
+    .image-upload { border: 2px dashed var(--gray-300); border-radius: 8px; padding: var(--space-xl); text-align: center; cursor: pointer; transition: all var(--transition-fast); }
+    .image-upload:hover { border-color: var(--navy); background: var(--gray-50); }
+    .image-upload input { display: none; }
+    .image-upload__preview { max-width: 200px; max-height: 200px; margin: var(--space-md) auto 0; border-radius: 8px; }
+    .alert { padding: var(--space-md) var(--space-lg); border-radius: 6px; margin-bottom: var(--space-lg); }
+    .alert--success { background: #c6f6d5; color: #22543d; }
+    .alert--error { background: #fed7d7; color: #822727; }
+    .hidden { display: none !important; }
+    .flyer-preview { max-width: 100px; border-radius: 4px; margin-top: var(--space-sm); }
+    .upload-progress { margin-top: var(--space-sm); font-size: 0.875rem; color: var(--gray-500); }
   </style>
 </head>
 <body>
@@ -372,17 +95,13 @@
           <input type="password" id="admin-password" required placeholder="Enter admin password">
         </div>
         <button type="submit" class="btn btn--primary" style="width: 100%;">Login</button>
-        <p id="login-error" style="color: #e53e3e; text-align: center; margin-top: var(--space-md); display: none;">
-          Incorrect password. Please try again.
-        </p>
+        <p id="login-error" style="color: #e53e3e; text-align: center; margin-top: var(--space-md); display: none;"></p>
       </form>
     </div>
   </div>
 
-  <!-- Admin Dashboard (hidden until login) -->
+  <!-- Admin Dashboard -->
   <div id="admin-dashboard" class="hidden">
-    
-    <!-- Admin Header -->
     <header class="admin-header">
       <div class="admin-header__inner">
         <h1>🦌 Mountainside Elks Admin</h1>
@@ -394,22 +113,19 @@
     </header>
 
     <div class="admin-container">
-      
-      <!-- Tabs -->
       <div class="tabs">
         <button class="tab active" data-tab="events">Events</button>
-        <button class="tab" data-tab="recurring">Recurring Events</button>
-        <button class="tab" data-tab="membership">Membership <span class="tab-badge" id="membership-count">0</span></button>
-        <button class="tab" data-tab="inquiries">Hall Inquiries <span class="tab-badge" id="inquiry-count">0</span></button>
+        <button class="tab" data-tab="recurring">Recurring</button>
+        <button class="tab" data-tab="officers">Officers</button>
+        <button class="tab" data-tab="inquiries">Inquiries <span class="tab-badge" id="inquiry-count">0</span></button>
         <button class="tab" data-tab="messages">Messages <span class="tab-badge" id="message-count">0</span></button>
+        <button class="tab" data-tab="settings">Settings</button>
       </div>
 
       <!-- Events Tab -->
       <div id="events-tab" class="tab-content active">
-        
-        <!-- Add Event Form -->
         <div class="admin-card">
-          <h2>Add New Event</h2>
+          <h2>Add Special Event</h2>
           <form id="add-event-form">
             <div class="form-row">
               <div class="form-group">
@@ -443,38 +159,42 @@
                 <input type="text" id="event-emoji" placeholder="e.g., 🎉 ☘️ 🥩" maxlength="4">
               </div>
               <div class="form-group">
-                <label for="event-image">Image Filename (optional)</label>
-                <input type="text" id="event-image" placeholder="e.g., event-stpatricks.jpg">
+                <label for="event-price">Price/Cost</label>
+                <input type="text" id="event-price" placeholder="e.g., $25 per person">
               </div>
             </div>
             <div class="form-group">
-              <label for="event-description">Description *</label>
-              <textarea id="event-description" rows="3" required placeholder="Brief description of the event..."></textarea>
+              <label for="event-description">Short Description *</label>
+              <textarea id="event-description" rows="2" required placeholder="Brief description for event card..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="event-details">Full Details (optional)</label>
+              <textarea id="event-details" rows="4" placeholder="Additional info shown when event is clicked..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="event-rsvp">RSVP Link (optional)</label>
+              <input type="url" id="event-rsvp" placeholder="https://...">
+            </div>
+            <div class="form-group">
+              <label>Event Flyer (optional)</label>
+              <div class="image-upload" id="event-flyer-upload">
+                <input type="file" id="event-flyer" accept="image/*">
+                <p>📄 Click to upload flyer image</p>
+                <p class="form-hint">JPG or PNG, max 5MB</p>
+                <img id="event-flyer-preview" class="image-upload__preview hidden">
+              </div>
+              <p id="event-upload-progress" class="upload-progress hidden"></p>
             </div>
             <button type="submit" class="btn btn--primary">Add Event</button>
           </form>
         </div>
-
-        <!-- Event List -->
         <div class="admin-card">
           <h2>Upcoming Events</h2>
-          <ul id="event-list" class="event-list">
-            <li class="empty-state">
-              <div class="empty-state__icon">📅</div>
-              <p>Loading events...</p>
-            </li>
-          </ul>
+          <ul id="event-list" class="event-list"><li class="empty-state"><div class="empty-state__icon">📅</div><p>Loading...</p></li></ul>
         </div>
-
-        <!-- Past Events -->
         <div class="admin-card">
           <h2>Past Events</h2>
-          <ul id="past-event-list" class="event-list">
-            <li class="empty-state">
-              <div class="empty-state__icon">📅</div>
-              <p>Loading past events...</p>
-            </li>
-          </ul>
+          <ul id="past-event-list" class="event-list"><li class="empty-state"><div class="empty-state__icon">📅</div><p>Loading...</p></li></ul>
         </div>
       </div>
 
@@ -499,11 +219,10 @@
                 <input type="text" id="recurring-emoji" placeholder="e.g., 🎤" maxlength="4">
               </div>
               <div class="form-group">
-                <label for="recurring-access">Who Can Attend?</label>
-                <select id="recurring-access">
-                  <option value="open">Open to All</option>
-                  <option value="guests">Members & Guests</option>
-                  <option value="members">Members Only</option>
+                <label for="recurring-open">Open to Public?</label>
+                <select id="recurring-open">
+                  <option value="true">Yes - Open to All</option>
+                  <option value="false">No - Members & Guests</option>
                 </select>
               </div>
             </div>
@@ -514,46 +233,80 @@
             <div class="form-group">
               <label for="recurring-sort">Sort Order</label>
               <input type="number" id="recurring-sort" value="10" min="1" max="99">
-              <small style="color: var(--gray-500);">Lower numbers appear first</small>
+              <p class="form-hint">Lower numbers appear first</p>
             </div>
             <button type="submit" class="btn btn--primary">Add Recurring Event</button>
           </form>
         </div>
-
         <div class="admin-card">
           <h2>Current Recurring Events</h2>
-          <ul id="recurring-list" class="event-list">
-            <li class="empty-state">
-              <div class="empty-state__icon">🔄</div>
-              <p>Loading recurring events...</p>
-            </li>
-          </ul>
+          <ul id="recurring-list" class="event-list"><li class="empty-state"><div class="empty-state__icon">🔄</div><p>Loading...</p></li></ul>
         </div>
       </div>
 
-      <!-- Membership Inquiries Tab -->
-      <div id="membership-tab" class="tab-content">
+      <!-- Officers Tab -->
+      <div id="officers-tab" class="tab-content">
         <div class="admin-card">
-          <h2>Membership Inquiries</h2>
-          <div id="membership-list">
-            <div class="empty-state">
-              <div class="empty-state__icon">🦌</div>
-              <p>Loading membership inquiries...</p>
+          <h2>Lodge Officers</h2>
+          <p style="color: var(--gray-600); margin-bottom: var(--space-xl);">Upload photos for each officer. Photos will appear on the About page.</p>
+          <div id="officers-grid" class="officer-grid"><p>Loading officers...</p></div>
+        </div>
+        <div class="admin-card">
+          <h2 id="officer-form-title">Add New Officer</h2>
+          <form id="officer-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="officer-name">Name *</label>
+                <input type="text" id="officer-name" required placeholder="e.g., John Smith">
+              </div>
+              <div class="form-group">
+                <label for="officer-title">Title *</label>
+                <select id="officer-title" required>
+                  <option value="">Select title...</option>
+                  <option value="Exalted Ruler">Exalted Ruler</option>
+                  <option value="Leading Knight">Leading Knight</option>
+                  <option value="Loyal Knight">Loyal Knight</option>
+                  <option value="Lecturing Knight">Lecturing Knight</option>
+                  <option value="Secretary">Secretary</option>
+                  <option value="Treasurer">Treasurer</option>
+                  <option value="Esquire">Esquire</option>
+                  <option value="Inner Guard">Inner Guard</option>
+                  <option value="Tiler">Tiler</option>
+                  <option value="Chaplain">Chaplain</option>
+                  <option value="1 Year Trustee">1 Year Trustee</option>
+                  <option value="2 Year Trustee">2 Year Trustee</option>
+                  <option value="3 Year Trustee">3 Year Trustee</option>
+                </select>
+              </div>
             </div>
-          </div>
+            <div class="form-group">
+              <label for="officer-sort">Sort Order</label>
+              <input type="number" id="officer-sort" value="10" min="1" max="99">
+              <p class="form-hint">1 = Exalted Ruler, 2 = Leading Knight, etc.</p>
+            </div>
+            <div class="form-group">
+              <label>Photo</label>
+              <div class="image-upload" id="officer-photo-upload">
+                <input type="file" id="officer-photo" accept="image/*">
+                <p>📷 Click to upload photo</p>
+                <p class="form-hint">Square photo works best, max 5MB</p>
+                <img id="officer-photo-preview" class="image-upload__preview hidden">
+              </div>
+              <p id="officer-upload-progress" class="upload-progress hidden"></p>
+            </div>
+            <input type="hidden" id="officer-id">
+            <input type="hidden" id="officer-existing-photo">
+            <button type="submit" class="btn btn--primary">Save Officer</button>
+            <button type="button" id="officer-cancel" class="btn btn--ghost hidden" style="margin-left: var(--space-sm);">Cancel</button>
+          </form>
         </div>
       </div>
 
-      <!-- Hall Inquiries Tab -->
+      <!-- Inquiries Tab -->
       <div id="inquiries-tab" class="tab-content">
         <div class="admin-card">
           <h2>Hall Rental Inquiries</h2>
-          <div id="inquiries-list">
-            <div class="empty-state">
-              <div class="empty-state__icon">📋</div>
-              <p>Loading inquiries...</p>
-            </div>
-          </div>
+          <div id="inquiries-list"><div class="empty-state"><div class="empty-state__icon">📋</div><p>Loading...</p></div></div>
         </div>
       </div>
 
@@ -561,183 +314,86 @@
       <div id="messages-tab" class="tab-content">
         <div class="admin-card">
           <h2>Contact Messages</h2>
-          <div id="messages-list">
-            <div class="empty-state">
-              <div class="empty-state__icon">✉️</div>
-              <p>Loading messages...</p>
+          <div id="messages-list"><div class="empty-state"><div class="empty-state__icon">✉️</div><p>Loading...</p></div></div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settings-tab" class="tab-content">
+        <div class="admin-card">
+          <h2>Change Admin Password</h2>
+          <form id="password-form">
+            <div class="form-group">
+              <label for="current-password">Current Password *</label>
+              <input type="password" id="current-password" required>
             </div>
-          </div>
+            <div class="form-group">
+              <label for="new-password">New Password *</label>
+              <input type="password" id="new-password" required minlength="6">
+              <p class="form-hint">Minimum 6 characters</p>
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Confirm New Password *</label>
+              <input type="password" id="confirm-password" required>
+            </div>
+            <div id="password-alert" class="hidden"></div>
+            <button type="submit" class="btn btn--primary">Update Password</button>
+          </form>
         </div>
       </div>
-
-    </div>
-  </div>
-
-  <!-- Edit Recurring Event Modal -->
-  <div id="edit-recurring-modal" class="modal hidden">
-    <div class="modal__backdrop" onclick="closeEditModal()"></div>
-    <div class="modal__content">
-      <div class="modal__header">
-        <h2>Edit Recurring Event</h2>
-        <button class="modal__close" onclick="closeEditModal()">&times;</button>
-      </div>
-      <form id="edit-recurring-form">
-        <input type="hidden" id="edit-recurring-id">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="edit-recurring-title">Event Title *</label>
-            <input type="text" id="edit-recurring-title" required>
-          </div>
-          <div class="form-group">
-            <label for="edit-recurring-schedule">Schedule *</label>
-            <input type="text" id="edit-recurring-schedule" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="edit-recurring-emoji">Emoji Icon</label>
-            <input type="text" id="edit-recurring-emoji" maxlength="4">
-          </div>
-          <div class="form-group">
-            <label for="edit-recurring-access">Who Can Attend?</label>
-            <select id="edit-recurring-access">
-              <option value="open">Open to All</option>
-              <option value="guests">Members & Guests</option>
-              <option value="members">Members Only</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="edit-recurring-description">Description *</label>
-          <textarea id="edit-recurring-description" rows="3" required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="edit-recurring-sort">Sort Order</label>
-          <input type="number" id="edit-recurring-sort" min="1" max="99">
-        </div>
-        <div style="display: flex; gap: var(--space-md); justify-content: flex-end;">
-          <button type="button" class="btn btn--ghost" onclick="closeEditModal()">Cancel</button>
-          <button type="submit" class="btn btn--primary">Save Changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Edit Special Event Modal -->
-  <div id="edit-event-modal" class="modal hidden">
-    <div class="modal__backdrop" onclick="closeEditEventModal()"></div>
-    <div class="modal__content">
-      <div class="modal__header">
-        <h2>Edit Event</h2>
-        <button class="modal__close" onclick="closeEditEventModal()">&times;</button>
-      </div>
-      <form id="edit-event-form">
-        <input type="hidden" id="edit-event-id">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="edit-event-title">Event Title *</label>
-            <input type="text" id="edit-event-title" required>
-          </div>
-          <div class="form-group">
-            <label for="edit-event-date">Date *</label>
-            <input type="date" id="edit-event-date" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="edit-event-time">Time</label>
-            <input type="text" id="edit-event-time">
-          </div>
-          <div class="form-group">
-            <label for="edit-event-tag">Tag</label>
-            <select id="edit-event-tag">
-              <option value="Open to All">Open to All</option>
-              <option value="Members & Guests">Members & Guests</option>
-              <option value="Members Only">Members Only</option>
-              <option value="Fundraiser">Fundraiser</option>
-              <option value="Community Event">Community Event</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="edit-event-emoji">Emoji Icon</label>
-            <input type="text" id="edit-event-emoji" maxlength="4">
-          </div>
-          <div class="form-group">
-            <label for="edit-event-image">Image Filename</label>
-            <input type="text" id="edit-event-image">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="edit-event-description">Description *</label>
-          <textarea id="edit-event-description" rows="3" required></textarea>
-        </div>
-        <div style="display: flex; gap: var(--space-md); justify-content: flex-end;">
-          <button type="button" class="btn btn--ghost" onclick="closeEditEventModal()">Cancel</button>
-          <button type="submit" class="btn btn--primary">Save Changes</button>
-        </div>
-      </form>
     </div>
   </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
   <script src="js/firebase-config.js"></script>
   
   <script>
-    // DOM Elements
+    // ==========================================
+    // GLOBAL STATE
+    // ==========================================
+    let currentEventFlyer = null;
+    let currentOfficerPhoto = null;
+    const storage = firebase.storage();
+
+    // ==========================================
+    // DOM ELEMENTS
+    // ==========================================
     const loginScreen = document.getElementById('login-screen');
     const adminDashboard = document.getElementById('admin-dashboard');
     const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
     const logoutBtn = document.getElementById('logout-btn');
 
-    // Check if already logged in
+    // ==========================================
+    // AUTHENTICATION
+    // ==========================================
     if (sessionStorage.getItem('elks-admin-auth') === 'true') {
       loginScreen.classList.add('hidden');
       adminDashboard.classList.remove('hidden');
       initAdmin();
     }
 
-    // Login handler - checks password against Firebase
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const password = document.getElementById('admin-password').value;
       const submitBtn = loginForm.querySelector('button[type="submit"]');
-      
       submitBtn.textContent = 'Checking...';
       submitBtn.disabled = true;
       loginError.style.display = 'none';
       
       try {
-        // Fetch password from Firebase siteConfig collection
         const doc = await db.collection('siteConfig').doc('admin').get();
-        
         if (!doc.exists) {
-          // If no config exists yet, create one with default password
-          await db.collection('siteConfig').doc('admin').set({
-            password: 'elks1585',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          // Check against default
-          if (password === 'elks1585') {
-            loginSuccess();
-          } else {
-            loginFail();
-          }
+          await db.collection('siteConfig').doc('admin').set({ password: 'elks1585', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          if (password === 'elks1585') { loginSuccess(); } else { loginFail(submitBtn); }
         } else {
-          const adminConfig = doc.data();
-          if (password === adminConfig.password) {
-            loginSuccess();
-          } else {
-            loginFail();
-          }
+          if (password === doc.data().password) { loginSuccess(); } else { loginFail(submitBtn); }
         }
       } catch (error) {
-        console.error('Login error:', error);
-        loginError.textContent = 'Error connecting to database. Please try again.';
+        loginError.textContent = 'Error connecting to database.';
         loginError.style.display = 'block';
         submitBtn.textContent = 'Login';
         submitBtn.disabled = false;
@@ -751,531 +407,374 @@
       initAdmin();
     }
     
-    function loginFail() {
-      const submitBtn = loginForm.querySelector('button[type="submit"]');
-      loginError.textContent = 'Incorrect password. Please try again.';
+    function loginFail(btn) {
+      loginError.textContent = 'Incorrect password.';
       loginError.style.display = 'block';
-      submitBtn.textContent = 'Login';
-      submitBtn.disabled = false;
+      btn.textContent = 'Login';
+      btn.disabled = false;
     }
 
-    // Logout handler
-    logoutBtn.addEventListener('click', () => {
-      sessionStorage.removeItem('elks-admin-auth');
-      location.reload();
-    });
+    logoutBtn.addEventListener('click', () => { sessionStorage.removeItem('elks-admin-auth'); location.reload(); });
 
-    // Tab switching
+    // ==========================================
+    // TAB SWITCHING
+    // ==========================================
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
         tab.classList.add('active');
         document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
       });
     });
 
-    // Initialize admin dashboard
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
     function initAdmin() {
       loadEvents();
       loadRecurringEvents();
-      loadMembershipInquiries();
+      loadOfficers();
       loadInquiries();
       loadMessages();
+      initImageUploads();
     }
 
-    // Load and display events
+    // ==========================================
+    // IMAGE UPLOADS (Firebase Storage)
+    // ==========================================
+    function initImageUploads() {
+      // Event flyer upload
+      const flyerUpload = document.getElementById('event-flyer-upload');
+      const flyerInput = document.getElementById('event-flyer');
+      const flyerPreview = document.getElementById('event-flyer-preview');
+      flyerUpload.addEventListener('click', () => flyerInput.click());
+      flyerInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          if (file.size > 5 * 1024 * 1024) { alert('File too large. Max 5MB.'); return; }
+          currentEventFlyer = file;
+          const reader = new FileReader();
+          reader.onload = (e) => { flyerPreview.src = e.target.result; flyerPreview.classList.remove('hidden'); };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Officer photo upload
+      const photoUpload = document.getElementById('officer-photo-upload');
+      const photoInput = document.getElementById('officer-photo');
+      const photoPreview = document.getElementById('officer-photo-preview');
+      photoUpload.addEventListener('click', () => photoInput.click());
+      photoInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          if (file.size > 5 * 1024 * 1024) { alert('File too large. Max 5MB.'); return; }
+          currentOfficerPhoto = file;
+          const reader = new FileReader();
+          reader.onload = (e) => { photoPreview.src = e.target.result; photoPreview.classList.remove('hidden'); };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    async function uploadToStorage(file, folder) {
+      const timestamp = Date.now();
+      const safeName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+      const path = `${folder}/${timestamp}_${safeName}`;
+      const ref = storage.ref(path);
+      
+      const snapshot = await ref.put(file);
+      const url = await snapshot.ref.getDownloadURL();
+      return url;
+    }
+
+    // ==========================================
+    // EVENTS
+    // ==========================================
     async function loadEvents() {
       const eventList = document.getElementById('event-list');
       const pastEventList = document.getElementById('past-event-list');
       const today = new Date().toISOString().split('T')[0];
-
       try {
         const snapshot = await db.collection('events').orderBy('date', 'asc').get();
         const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
         const upcoming = events.filter(e => e.date >= today);
         const past = events.filter(e => e.date < today).reverse();
-
-        if (upcoming.length === 0) {
-          eventList.innerHTML = '<li class="empty-state"><div class="empty-state__icon">📅</div><p>No upcoming events</p></li>';
-        } else {
-          eventList.innerHTML = upcoming.map(event => renderEventItem(event)).join('');
-        }
-
-        if (past.length === 0) {
-          pastEventList.innerHTML = '<li class="empty-state"><div class="empty-state__icon">📅</div><p>No past events</p></li>';
-        } else {
-          pastEventList.innerHTML = past.slice(0, 10).map(event => renderEventItem(event, true)).join('');
-        }
-      } catch (error) {
-        console.error('Error loading events:', error);
-        eventList.innerHTML = '<li class="empty-state"><p>Error loading events</p></li>';
-      }
+        eventList.innerHTML = upcoming.length === 0 ? '<li class="empty-state"><div class="empty-state__icon">📅</div><p>No upcoming events</p></li>' : upcoming.map(e => renderEventItem(e)).join('');
+        pastEventList.innerHTML = past.length === 0 ? '<li class="empty-state"><div class="empty-state__icon">📅</div><p>No past events</p></li>' : past.slice(0,10).map(e => renderEventItem(e, true)).join('');
+      } catch (error) { console.error(error); eventList.innerHTML = '<li class="empty-state"><p>Error loading events</p></li>'; }
     }
 
     function renderEventItem(event, isPast = false) {
-      return `
-        <li class="event-item ${isPast ? 'event-item--past' : ''}">
-          <div class="event-item__info">
-            <div class="event-item__title">${event.emoji || '📅'} ${event.title}</div>
-            <div class="event-item__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''} • ${event.tag || 'Event'}</div>
-          </div>
-          <div class="event-item__actions">
-            <button class="btn btn--ghost btn--small" onclick="openEditEventModal('${event.id}')">Edit</button>
-            <button class="btn btn--danger btn--small" onclick="deleteEvent('${event.id}')">Delete</button>
-          </div>
-        </li>
-      `;
+      const flyerHtml = event.flyerUrl ? `<img src="${event.flyerUrl}" class="flyer-preview" alt="Flyer">` : '';
+      return `<li class="event-item ${isPast ? 'event-item--past' : ''}"><div class="event-item__info"><div class="event-item__title">${event.emoji || '📅'} ${event.title}</div><div class="event-item__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''} • ${event.tag || 'Event'}</div>${flyerHtml}</div><div class="event-item__actions"><button class="btn btn--danger btn--small" onclick="deleteEvent('${event.id}')">Delete</button></div></li>`;
     }
 
-    // Add event
     document.getElementById('add-event-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const progressEl = document.getElementById('event-upload-progress');
+      submitBtn.textContent = 'Adding...';
+      submitBtn.disabled = true;
       
-      const eventData = {
-        title: document.getElementById('event-title').value,
-        date: document.getElementById('event-date').value,
-        time: document.getElementById('event-time').value,
-        tag: document.getElementById('event-tag').value,
-        emoji: document.getElementById('event-emoji').value || '📅',
-        image: document.getElementById('event-image').value,
-        description: document.getElementById('event-description').value
-      };
-
       try {
+        let flyerUrl = null;
+        if (currentEventFlyer) {
+          progressEl.textContent = 'Uploading flyer...';
+          progressEl.classList.remove('hidden');
+          flyerUrl = await uploadToStorage(currentEventFlyer, 'event-flyers');
+        }
+        
         await db.collection('events').add({
-          ...eventData,
+          title: document.getElementById('event-title').value,
+          date: document.getElementById('event-date').value,
+          time: document.getElementById('event-time').value,
+          tag: document.getElementById('event-tag').value,
+          emoji: document.getElementById('event-emoji').value || '📅',
+          price: document.getElementById('event-price').value,
+          description: document.getElementById('event-description').value,
+          details: document.getElementById('event-details').value,
+          rsvpUrl: document.getElementById('event-rsvp').value,
+          flyerUrl: flyerUrl,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
+        
         e.target.reset();
+        currentEventFlyer = null;
+        document.getElementById('event-flyer-preview').classList.add('hidden');
+        progressEl.classList.add('hidden');
         loadEvents();
-        alert('Event added successfully!');
-      } catch (error) {
-        console.error('Error adding event:', error);
-        alert('Error adding event. Please try again.');
+        alert('Event added!');
+      } catch (error) { 
+        console.error(error);
+        alert('Error: ' + error.message); 
       }
+      submitBtn.textContent = 'Add Event';
+      submitBtn.disabled = false;
     });
 
-    // Delete event
-    async function deleteEvent(eventId) {
-      if (!confirm('Are you sure you want to delete this event?')) return;
-      
-      try {
-        await db.collection('events').doc(eventId).delete();
-        loadEvents();
-      } catch (error) {
-        console.error('Error deleting event:', error);
-        alert('Error deleting event. Please try again.');
-      }
+    async function deleteEvent(id) {
+      if (!confirm('Delete this event?')) return;
+      try { await db.collection('events').doc(id).delete(); loadEvents(); } catch (e) { alert('Error deleting'); }
     }
 
-    // Load recurring events
+    // ==========================================
+    // RECURRING EVENTS
+    // ==========================================
     async function loadRecurringEvents() {
       const list = document.getElementById('recurring-list');
-      
-      // Helper to get access label
-      function getAccessLabel(event) {
-        if (event.accessLevel === 'open') return 'Open to All';
-        if (event.accessLevel === 'members') return 'Members Only';
-        if (event.accessLevel === 'guests') return 'Members & Guests';
-        // Fallback for old data
-        if (event.openToAll === true) return 'Open to All';
-        return 'Members & Guests';
-      }
-      
       try {
         const snapshot = await db.collection('recurring-events').orderBy('sortOrder', 'asc').get();
         const events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        if (events.length === 0) {
-          list.innerHTML = '<li class="empty-state"><div class="empty-state__icon">🔄</div><p>No recurring events</p></li>';
-        } else {
-          list.innerHTML = events.map(event => `
-            <li class="event-item">
-              <div class="event-item__info">
-                <div class="event-item__title">${event.emoji || '📅'} ${event.title}</div>
-                <div class="event-item__meta">${event.schedule} • ${getAccessLabel(event)}</div>
-              </div>
-              <div class="event-item__actions">
-                <button class="btn btn--ghost btn--small" onclick="openEditRecurringModal('${event.id}')">Edit</button>
-                <button class="btn btn--danger btn--small" onclick="deleteRecurring('${event.id}')">Delete</button>
-              </div>
-            </li>
-          `).join('');
-        }
-      } catch (error) {
-        console.error('Error loading recurring events:', error);
-      }
+        list.innerHTML = events.length === 0 ? '<li class="empty-state"><div class="empty-state__icon">🔄</div><p>No recurring events</p></li>' : events.map(e => `<li class="event-item"><div class="event-item__info"><div class="event-item__title">${e.emoji || '📅'} ${e.title}</div><div class="event-item__meta">${e.schedule} • ${e.openToAll ? 'Open to All' : 'Members & Guests'}</div></div><div class="event-item__actions"><button class="btn btn--danger btn--small" onclick="deleteRecurring('${e.id}')">Delete</button></div></li>`).join('');
+      } catch (e) { console.error(e); }
     }
 
-    // Add recurring event
     document.getElementById('add-recurring-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      const eventData = {
-        title: document.getElementById('recurring-title').value,
-        schedule: document.getElementById('recurring-schedule').value,
-        emoji: document.getElementById('recurring-emoji').value || '📅',
-        accessLevel: document.getElementById('recurring-access').value,
-        description: document.getElementById('recurring-description').value,
-        sortOrder: parseInt(document.getElementById('recurring-sort').value) || 10
-      };
-
       try {
-        await db.collection('recurring-events').add(eventData);
+        await db.collection('recurring-events').add({
+          title: document.getElementById('recurring-title').value,
+          schedule: document.getElementById('recurring-schedule').value,
+          emoji: document.getElementById('recurring-emoji').value || '📅',
+          openToAll: document.getElementById('recurring-open').value === 'true',
+          description: document.getElementById('recurring-description').value,
+          sortOrder: parseInt(document.getElementById('recurring-sort').value) || 10
+        });
         e.target.reset();
         document.getElementById('recurring-sort').value = '10';
         loadRecurringEvents();
-        alert('Recurring event added successfully!');
-      } catch (error) {
-        console.error('Error adding recurring event:', error);
-        alert('Error adding recurring event. Please try again.');
-      }
+        alert('Added!');
+      } catch (e) { alert('Error: ' + e.message); }
     });
 
-    // Delete recurring event
-    async function deleteRecurring(eventId) {
-      if (!confirm('Are you sure you want to delete this recurring event?')) return;
-      
-      try {
-        await db.collection('recurring-events').doc(eventId).delete();
-        loadRecurringEvents();
-      } catch (error) {
-        console.error('Error deleting recurring event:', error);
-        alert('Error deleting recurring event. Please try again.');
-      }
+    async function deleteRecurring(id) {
+      if (!confirm('Delete?')) return;
+      try { await db.collection('recurring-events').doc(id).delete(); loadRecurringEvents(); } catch (e) { console.error(e); }
     }
 
-    // Load membership inquiries
-    async function loadMembershipInquiries() {
-      const list = document.getElementById('membership-list');
-      const countBadge = document.getElementById('membership-count');
+    // ==========================================
+    // OFFICERS
+    // ==========================================
+    async function loadOfficers() {
+      const grid = document.getElementById('officers-grid');
+      try {
+        const snapshot = await db.collection('officers').orderBy('sortOrder', 'asc').get();
+        const officers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        grid.innerHTML = officers.length === 0 ? '<p style="color: var(--gray-500);">No officers added yet. Use the form below to add officers.</p>' : officers.map(o => `<div class="officer-card"><div class="officer-card__photo">${o.photoUrl ? `<img src="${o.photoUrl}" alt="${o.name}">` : `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>`}</div><div class="officer-card__name">${o.name}</div><div class="officer-card__title">${o.title}</div><button class="btn btn--ghost btn--small" onclick="editOfficer('${o.id}')" style="margin-right:4px;">Edit</button><button class="btn btn--danger btn--small" onclick="deleteOfficer('${o.id}')">Delete</button></div>`).join('');
+      } catch (e) { console.error(e); grid.innerHTML = '<p>Error loading officers</p>'; }
+    }
+
+    document.getElementById('officer-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const progressEl = document.getElementById('officer-upload-progress');
+      submitBtn.textContent = 'Saving...';
+      submitBtn.disabled = true;
       
       try {
-        const snapshot = await db.collection('membership-inquiries').orderBy('createdAt', 'desc').get();
-        const inquiries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        let photoUrl = document.getElementById('officer-existing-photo').value || null;
         
-        const newCount = inquiries.filter(i => i.status === 'new').length;
-        countBadge.textContent = newCount;
-        
-        if (inquiries.length === 0) {
-          list.innerHTML = '<div class="empty-state"><div class="empty-state__icon">🦌</div><p>No membership inquiries yet</p></div>';
-        } else {
-          list.innerHTML = inquiries.map(inquiry => renderMembershipInquiry(inquiry)).join('');
+        if (currentOfficerPhoto) {
+          progressEl.textContent = 'Uploading photo...';
+          progressEl.classList.remove('hidden');
+          photoUrl = await uploadToStorage(currentOfficerPhoto, 'officer-photos');
         }
-      } catch (error) {
-        console.error('Error loading membership inquiries:', error);
+        
+        const officerId = document.getElementById('officer-id').value;
+        const data = { 
+          name: document.getElementById('officer-name').value, 
+          title: document.getElementById('officer-title').value, 
+          sortOrder: parseInt(document.getElementById('officer-sort').value) || 10, 
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
+        };
+        if (photoUrl) data.photoUrl = photoUrl;
+        
+        if (officerId) { 
+          await db.collection('officers').doc(officerId).update(data); 
+        } else { 
+          data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); 
+          await db.collection('officers').add(data); 
+        }
+        
+        resetOfficerForm();
+        loadOfficers();
+        alert('Officer saved!');
+      } catch (error) { 
+        console.error(error);
+        alert('Error: ' + error.message); 
       }
-    }
+      submitBtn.textContent = 'Save Officer';
+      submitBtn.disabled = false;
+    });
 
-    function renderMembershipInquiry(inquiry) {
-      const date = inquiry.createdAt ? inquiry.createdAt.toDate().toLocaleDateString() : 'Unknown';
-      const statusClass = `status-badge--${inquiry.status || 'new'}`;
-      
-      return `
-        <div class="inquiry-item ${inquiry.status === 'new' ? 'inquiry-item--new' : ''}">
-          <div class="inquiry-item__header">
-            <div>
-              <div class="inquiry-item__name">${inquiry.name}</div>
-              <div class="inquiry-item__date">Submitted: ${date}</div>
-            </div>
-            <span class="status-badge ${statusClass}">${inquiry.status || 'new'}</span>
-          </div>
-          <div class="inquiry-item__details">
-            <div><strong>Email:</strong> <a href="mailto:${inquiry.email}">${inquiry.email}</a></div>
-            <div><strong>Phone:</strong> ${inquiry.phone || 'Not provided'}</div>
-            <div><strong>City:</strong> ${inquiry.city || 'Not provided'}</div>
-            <div><strong>Referral:</strong> ${inquiry.referral || 'Not specified'}</div>
-          </div>
-          ${inquiry.message ? `<div class="inquiry-item__message">${inquiry.message}</div>` : ''}
-          <div class="inquiry-item__actions">
-            <button class="btn btn--small btn--ghost" onclick="updateMembershipStatus('${inquiry.id}', 'contacted')">Mark Contacted</button>
-            <button class="btn btn--small btn--ghost" onclick="updateMembershipStatus('${inquiry.id}', 'joined')">Mark Joined</button>
-            <button class="btn btn--small btn--ghost" onclick="updateMembershipStatus('${inquiry.id}', 'closed')">Close</button>
-            <button class="btn btn--small btn--danger" onclick="deleteMembershipInquiry('${inquiry.id}')">Delete</button>
-          </div>
-        </div>
-      `;
-    }
-
-    async function updateMembershipStatus(id, status) {
+    async function editOfficer(id) {
       try {
-        await db.collection('membership-inquiries').doc(id).update({ status });
-        loadMembershipInquiries();
-      } catch (error) {
-        console.error('Error updating membership inquiry:', error);
-      }
+        const doc = await db.collection('officers').doc(id).get();
+        if (doc.exists) {
+          const o = doc.data();
+          document.getElementById('officer-form-title').textContent = 'Edit Officer';
+          document.getElementById('officer-id').value = id;
+          document.getElementById('officer-name').value = o.name;
+          document.getElementById('officer-title').value = o.title;
+          document.getElementById('officer-sort').value = o.sortOrder || 10;
+          document.getElementById('officer-existing-photo').value = o.photoUrl || '';
+          if (o.photoUrl) { 
+            document.getElementById('officer-photo-preview').src = o.photoUrl; 
+            document.getElementById('officer-photo-preview').classList.remove('hidden'); 
+          }
+          document.getElementById('officer-cancel').classList.remove('hidden');
+          document.getElementById('officer-form').scrollIntoView({ behavior: 'smooth' });
+        }
+      } catch (e) { console.error(e); }
     }
 
-    async function deleteMembershipInquiry(id) {
-      if (!confirm('Delete this membership inquiry?')) return;
-      try {
-        await db.collection('membership-inquiries').doc(id).delete();
-        loadMembershipInquiries();
-      } catch (error) {
-        console.error('Error deleting membership inquiry:', error);
-      }
+    function resetOfficerForm() {
+      document.getElementById('officer-form').reset();
+      document.getElementById('officer-form-title').textContent = 'Add New Officer';
+      document.getElementById('officer-id').value = '';
+      document.getElementById('officer-existing-photo').value = '';
+      document.getElementById('officer-sort').value = '10';
+      document.getElementById('officer-photo-preview').classList.add('hidden');
+      document.getElementById('officer-cancel').classList.add('hidden');
+      document.getElementById('officer-upload-progress').classList.add('hidden');
+      currentOfficerPhoto = null;
     }
 
-    // Load hall inquiries
+    document.getElementById('officer-cancel').addEventListener('click', resetOfficerForm);
+
+    async function deleteOfficer(id) {
+      if (!confirm('Delete this officer?')) return;
+      try { await db.collection('officers').doc(id).delete(); loadOfficers(); } catch (e) { console.error(e); }
+    }
+
+    // ==========================================
+    // HALL INQUIRIES
+    // ==========================================
     async function loadInquiries() {
       const list = document.getElementById('inquiries-list');
       const countBadge = document.getElementById('inquiry-count');
-      
       try {
         const snapshot = await db.collection('hall-inquiries').orderBy('createdAt', 'desc').get();
         const inquiries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        const newCount = inquiries.filter(i => i.status === 'new').length;
-        countBadge.textContent = newCount;
-        
-        if (inquiries.length === 0) {
-          list.innerHTML = '<div class="empty-state"><div class="empty-state__icon">📋</div><p>No inquiries yet</p></div>';
-        } else {
-          list.innerHTML = inquiries.map(inquiry => renderInquiry(inquiry)).join('');
-        }
-      } catch (error) {
-        console.error('Error loading inquiries:', error);
-      }
+        countBadge.textContent = inquiries.filter(i => i.status === 'new').length;
+        list.innerHTML = inquiries.length === 0 ? '<div class="empty-state"><div class="empty-state__icon">📋</div><p>No inquiries yet</p></div>' : inquiries.map(i => renderInquiry(i)).join('');
+      } catch (e) { console.error(e); }
     }
 
-    function renderInquiry(inquiry) {
-      const date = inquiry.createdAt ? inquiry.createdAt.toDate().toLocaleDateString() : 'Unknown';
-      const statusClass = `status-badge--${inquiry.status || 'new'}`;
-      
-      return `
-        <div class="inquiry-item ${inquiry.status === 'new' ? 'inquiry-item--new' : ''}">
-          <div class="inquiry-item__header">
-            <div>
-              <div class="inquiry-item__name">${inquiry.name}</div>
-              <div class="inquiry-item__date">Submitted: ${date}</div>
-            </div>
-            <span class="status-badge ${statusClass}">${inquiry.status || 'new'}</span>
-          </div>
-          <div class="inquiry-item__details">
-            <div><strong>Email:</strong> <a href="mailto:${inquiry.email}">${inquiry.email}</a></div>
-            <div><strong>Phone:</strong> ${inquiry.phone || 'Not provided'}</div>
-            <div><strong>Event Date:</strong> ${inquiry.eventDate || 'Not specified'}</div>
-            <div><strong>Event Type:</strong> ${inquiry.eventType || 'Not specified'}</div>
-            <div><strong>Guests:</strong> ${inquiry.guestCount || 'Not specified'}</div>
-          </div>
-          ${inquiry.message ? `<div class="inquiry-item__message">${inquiry.message}</div>` : ''}
-          <div class="inquiry-item__actions">
-            <button class="btn btn--small btn--ghost" onclick="updateInquiryStatus('${inquiry.id}', 'contacted')">Mark Contacted</button>
-            <button class="btn btn--small btn--ghost" onclick="updateInquiryStatus('${inquiry.id}', 'booked')">Mark Booked</button>
-            <button class="btn btn--small btn--ghost" onclick="updateInquiryStatus('${inquiry.id}', 'closed')">Close</button>
-            <button class="btn btn--small btn--danger" onclick="deleteInquiry('${inquiry.id}')">Delete</button>
-          </div>
-        </div>
-      `;
+    function renderInquiry(i) {
+      const date = i.createdAt ? i.createdAt.toDate().toLocaleDateString() : 'Unknown';
+      return `<div class="inquiry-item ${i.status === 'new' ? 'inquiry-item--new' : ''}"><div class="inquiry-item__header"><div><div class="inquiry-item__name">${i.name}</div><div class="inquiry-item__date">Submitted: ${date}</div></div><span class="status-badge status-badge--${i.status || 'new'}">${i.status || 'new'}</span></div><div class="inquiry-item__details"><div><strong>Email:</strong> <a href="mailto:${i.email}">${i.email}</a></div><div><strong>Phone:</strong> ${i.phone || 'N/A'}</div><div><strong>Event Date:</strong> ${i.eventDate || 'N/A'}</div><div><strong>Type:</strong> ${i.eventType || 'N/A'}</div><div><strong>Guests:</strong> ${i.guestCount || 'N/A'}</div></div>${i.message ? `<div class="inquiry-item__message">${i.message}</div>` : ''}<div class="inquiry-item__actions"><button class="btn btn--small btn--ghost" onclick="updateInquiryStatus('${i.id}', 'contacted')">Contacted</button><button class="btn btn--small btn--ghost" onclick="updateInquiryStatus('${i.id}', 'booked')">Booked</button><button class="btn btn--small btn--ghost" onclick="updateInquiryStatus('${i.id}', 'closed')">Close</button><button class="btn btn--small btn--danger" onclick="deleteInquiry('${i.id}')">Delete</button></div></div>`;
     }
 
-    async function updateInquiryStatus(id, status) {
-      try {
-        await db.collection('hall-inquiries').doc(id).update({ status });
-        loadInquiries();
-      } catch (error) {
-        console.error('Error updating inquiry:', error);
-      }
-    }
+    async function updateInquiryStatus(id, status) { try { await db.collection('hall-inquiries').doc(id).update({ status }); loadInquiries(); } catch (e) { console.error(e); } }
+    async function deleteInquiry(id) { if (!confirm('Delete?')) return; try { await db.collection('hall-inquiries').doc(id).delete(); loadInquiries(); } catch (e) { console.error(e); } }
 
-    async function deleteInquiry(id) {
-      if (!confirm('Delete this inquiry?')) return;
-      try {
-        await db.collection('hall-inquiries').doc(id).delete();
-        loadInquiries();
-      } catch (error) {
-        console.error('Error deleting inquiry:', error);
-      }
-    }
-
-    // Load contact messages
+    // ==========================================
+    // CONTACT MESSAGES
+    // ==========================================
     async function loadMessages() {
       const list = document.getElementById('messages-list');
       const countBadge = document.getElementById('message-count');
-      
       try {
         const snapshot = await db.collection('contact-messages').orderBy('createdAt', 'desc').get();
         const messages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
-        const newCount = messages.filter(m => m.status === 'new').length;
-        countBadge.textContent = newCount;
-        
-        if (messages.length === 0) {
-          list.innerHTML = '<div class="empty-state"><div class="empty-state__icon">✉️</div><p>No messages yet</p></div>';
-        } else {
-          list.innerHTML = messages.map(msg => renderMessage(msg)).join('');
-        }
-      } catch (error) {
-        console.error('Error loading messages:', error);
-      }
+        countBadge.textContent = messages.filter(m => m.status === 'new').length;
+        list.innerHTML = messages.length === 0 ? '<div class="empty-state"><div class="empty-state__icon">✉️</div><p>No messages yet</p></div>' : messages.map(m => renderMessage(m)).join('');
+      } catch (e) { console.error(e); }
     }
 
-    function renderMessage(msg) {
-      const date = msg.createdAt ? msg.createdAt.toDate().toLocaleDateString() : 'Unknown';
-      
-      return `
-        <div class="inquiry-item ${msg.status === 'new' ? 'inquiry-item--new' : ''}">
-          <div class="inquiry-item__header">
-            <div>
-              <div class="inquiry-item__name">${msg.name}</div>
-              <div class="inquiry-item__date">${date} • ${msg.subject || 'General'}</div>
-            </div>
-            <span class="status-badge status-badge--${msg.status || 'new'}">${msg.status || 'new'}</span>
-          </div>
-          <div class="inquiry-item__details">
-            <div><strong>Email:</strong> <a href="mailto:${msg.email}">${msg.email}</a></div>
-            <div><strong>Phone:</strong> ${msg.phone || 'Not provided'}</div>
-          </div>
-          <div class="inquiry-item__message">${msg.message}</div>
-          <div class="inquiry-item__actions">
-            <button class="btn btn--small btn--ghost" onclick="updateMessageStatus('${msg.id}', 'replied')">Mark Replied</button>
-            <button class="btn btn--small btn--danger" onclick="deleteMessage('${msg.id}')">Delete</button>
-          </div>
-        </div>
-      `;
+    function renderMessage(m) {
+      const date = m.createdAt ? m.createdAt.toDate().toLocaleDateString() : 'Unknown';
+      return `<div class="inquiry-item ${m.status === 'new' ? 'inquiry-item--new' : ''}"><div class="inquiry-item__header"><div><div class="inquiry-item__name">${m.name}</div><div class="inquiry-item__date">${date} • ${m.subject || 'General'}</div></div><span class="status-badge status-badge--${m.status || 'new'}">${m.status || 'new'}</span></div><div class="inquiry-item__details"><div><strong>Email:</strong> <a href="mailto:${m.email}">${m.email}</a></div><div><strong>Phone:</strong> ${m.phone || 'N/A'}</div></div><div class="inquiry-item__message">${m.message}</div><div class="inquiry-item__actions"><button class="btn btn--small btn--ghost" onclick="updateMessageStatus('${m.id}', 'replied')">Replied</button><button class="btn btn--small btn--danger" onclick="deleteMessage('${m.id}')">Delete</button></div></div>`;
     }
 
-    async function updateMessageStatus(id, status) {
-      try {
-        await db.collection('contact-messages').doc(id).update({ status });
-        loadMessages();
-      } catch (error) {
-        console.error('Error updating message:', error);
-      }
-    }
+    async function updateMessageStatus(id, status) { try { await db.collection('contact-messages').doc(id).update({ status }); loadMessages(); } catch (e) { console.error(e); } }
+    async function deleteMessage(id) { if (!confirm('Delete?')) return; try { await db.collection('contact-messages').doc(id).delete(); loadMessages(); } catch (e) { console.error(e); } }
 
-    async function deleteMessage(id) {
-      if (!confirm('Delete this message?')) return;
-      try {
-        await db.collection('contact-messages').doc(id).delete();
-        loadMessages();
-      } catch (error) {
-        console.error('Error deleting message:', error);
-      }
-    }
-
-    // ===== EDIT RECURRING EVENT MODAL =====
-    
-    async function openEditRecurringModal(eventId) {
-      const modal = document.getElementById('edit-recurring-modal');
-      
-      try {
-        const doc = await db.collection('recurring-events').doc(eventId).get();
-        if (!doc.exists) {
-          alert('Event not found');
-          return;
-        }
-        
-        const event = doc.data();
-        
-        document.getElementById('edit-recurring-id').value = eventId;
-        document.getElementById('edit-recurring-title').value = event.title || '';
-        document.getElementById('edit-recurring-schedule').value = event.schedule || '';
-        document.getElementById('edit-recurring-emoji').value = event.emoji || '';
-        document.getElementById('edit-recurring-description').value = event.description || '';
-        document.getElementById('edit-recurring-sort').value = event.sortOrder || 10;
-        
-        // Handle access level (with fallback for old data)
-        let accessLevel = event.accessLevel;
-        if (!accessLevel) {
-          accessLevel = event.openToAll ? 'open' : 'guests';
-        }
-        document.getElementById('edit-recurring-access').value = accessLevel;
-        
-        modal.classList.remove('hidden');
-      } catch (error) {
-        console.error('Error loading event:', error);
-        alert('Error loading event. Please try again.');
-      }
-    }
-    
-    function closeEditModal() {
-      document.getElementById('edit-recurring-modal').classList.add('hidden');
-    }
-    
-    document.getElementById('edit-recurring-form').addEventListener('submit', async (e) => {
+    // ==========================================
+    // PASSWORD CHANGE
+    // ==========================================
+    document.getElementById('password-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const alertEl = document.getElementById('password-alert');
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
       
-      const eventId = document.getElementById('edit-recurring-id').value;
-      const eventData = {
-        title: document.getElementById('edit-recurring-title').value,
-        schedule: document.getElementById('edit-recurring-schedule').value,
-        emoji: document.getElementById('edit-recurring-emoji').value || '📅',
-        accessLevel: document.getElementById('edit-recurring-access').value,
-        description: document.getElementById('edit-recurring-description').value,
-        sortOrder: parseInt(document.getElementById('edit-recurring-sort').value) || 10
-      };
-      
-      try {
-        await db.collection('recurring-events').doc(eventId).update(eventData);
-        closeEditModal();
-        loadRecurringEvents();
-        alert('Event updated successfully!');
-      } catch (error) {
-        console.error('Error updating event:', error);
-        alert('Error updating event. Please try again.');
+      if (newPassword !== confirmPassword) { 
+        alertEl.className = 'alert alert--error'; 
+        alertEl.textContent = 'Passwords do not match.'; 
+        alertEl.classList.remove('hidden'); 
+        return; 
       }
-    });
-
-    // ===== EDIT SPECIAL EVENT MODAL =====
-    
-    async function openEditEventModal(eventId) {
-      const modal = document.getElementById('edit-event-modal');
+      if (newPassword.length < 6) { 
+        alertEl.className = 'alert alert--error'; 
+        alertEl.textContent = 'Password must be at least 6 characters.'; 
+        alertEl.classList.remove('hidden'); 
+        return; 
+      }
       
       try {
-        const doc = await db.collection('events').doc(eventId).get();
-        if (!doc.exists) {
-          alert('Event not found');
-          return;
+        const doc = await db.collection('siteConfig').doc('admin').get();
+        if (!doc.exists || doc.data().password !== currentPassword) { 
+          alertEl.className = 'alert alert--error'; 
+          alertEl.textContent = 'Current password is incorrect.'; 
+          alertEl.classList.remove('hidden'); 
+          return; 
         }
-        
-        const event = doc.data();
-        
-        document.getElementById('edit-event-id').value = eventId;
-        document.getElementById('edit-event-title').value = event.title || '';
-        document.getElementById('edit-event-date').value = event.date || '';
-        document.getElementById('edit-event-time').value = event.time || '';
-        document.getElementById('edit-event-tag').value = event.tag || 'Open to All';
-        document.getElementById('edit-event-emoji').value = event.emoji || '';
-        document.getElementById('edit-event-image').value = event.image || '';
-        document.getElementById('edit-event-description').value = event.description || '';
-        
-        modal.classList.remove('hidden');
-      } catch (error) {
-        console.error('Error loading event:', error);
-        alert('Error loading event. Please try again.');
-      }
-    }
-    
-    function closeEditEventModal() {
-      document.getElementById('edit-event-modal').classList.add('hidden');
-    }
-    
-    document.getElementById('edit-event-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const eventId = document.getElementById('edit-event-id').value;
-      const eventData = {
-        title: document.getElementById('edit-event-title').value,
-        date: document.getElementById('edit-event-date').value,
-        time: document.getElementById('edit-event-time').value,
-        tag: document.getElementById('edit-event-tag').value,
-        emoji: document.getElementById('edit-event-emoji').value || '📅',
-        image: document.getElementById('edit-event-image').value,
-        description: document.getElementById('edit-event-description').value
-      };
-      
-      try {
-        await db.collection('events').doc(eventId).update(eventData);
-        closeEditEventModal();
-        loadEvents();
-        alert('Event updated successfully!');
-      } catch (error) {
-        console.error('Error updating event:', error);
-        alert('Error updating event. Please try again.');
+        await db.collection('siteConfig').doc('admin').update({ 
+          password: newPassword, 
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp() 
+        });
+        alertEl.className = 'alert alert--success';
+        alertEl.textContent = 'Password updated!';
+        alertEl.classList.remove('hidden');
+        e.target.reset();
+      } catch (error) { 
+        alertEl.className = 'alert alert--error'; 
+        alertEl.textContent = 'Error: ' + error.message; 
+        alertEl.classList.remove('hidden'); 
       }
     });
   </script>

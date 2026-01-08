@@ -298,6 +298,62 @@
       margin-bottom: var(--space-md);
     }
     
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal__backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .modal__content {
+      position: relative;
+      background: var(--white);
+      border-radius: 12px;
+      padding: var(--space-xl);
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .modal__header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    .modal__close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-500);
+      padding: 0;
+      line-height: 1;
+    }
+    .modal__close:hover {
+      color: var(--gray-700);
+    }
+    
     /* Hidden */
     .hidden {
       display: none !important;
@@ -503,6 +559,114 @@
     </div>
   </div>
 
+  <!-- Edit Recurring Event Modal -->
+  <div id="edit-recurring-modal" class="modal hidden">
+    <div class="modal__backdrop" onclick="closeEditModal()"></div>
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2>Edit Recurring Event</h2>
+        <button class="modal__close" onclick="closeEditModal()">&times;</button>
+      </div>
+      <form id="edit-recurring-form">
+        <input type="hidden" id="edit-recurring-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-recurring-title">Event Title *</label>
+            <input type="text" id="edit-recurring-title" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-recurring-schedule">Schedule *</label>
+            <input type="text" id="edit-recurring-schedule" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-recurring-emoji">Emoji Icon</label>
+            <input type="text" id="edit-recurring-emoji" maxlength="4">
+          </div>
+          <div class="form-group">
+            <label for="edit-recurring-access">Who Can Attend?</label>
+            <select id="edit-recurring-access">
+              <option value="open">Open to All</option>
+              <option value="guests">Members & Guests</option>
+              <option value="members">Members Only</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="edit-recurring-description">Description *</label>
+          <textarea id="edit-recurring-description" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="edit-recurring-sort">Sort Order</label>
+          <input type="number" id="edit-recurring-sort" min="1" max="99">
+        </div>
+        <div style="display: flex; gap: var(--space-md); justify-content: flex-end;">
+          <button type="button" class="btn btn--ghost" onclick="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn btn--primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Special Event Modal -->
+  <div id="edit-event-modal" class="modal hidden">
+    <div class="modal__backdrop" onclick="closeEditEventModal()"></div>
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2>Edit Event</h2>
+        <button class="modal__close" onclick="closeEditEventModal()">&times;</button>
+      </div>
+      <form id="edit-event-form">
+        <input type="hidden" id="edit-event-id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-event-title">Event Title *</label>
+            <input type="text" id="edit-event-title" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-event-date">Date *</label>
+            <input type="date" id="edit-event-date" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-event-time">Time</label>
+            <input type="text" id="edit-event-time">
+          </div>
+          <div class="form-group">
+            <label for="edit-event-tag">Tag</label>
+            <select id="edit-event-tag">
+              <option value="Open to All">Open to All</option>
+              <option value="Members & Guests">Members & Guests</option>
+              <option value="Members Only">Members Only</option>
+              <option value="Fundraiser">Fundraiser</option>
+              <option value="Community Event">Community Event</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-event-emoji">Emoji Icon</label>
+            <input type="text" id="edit-event-emoji" maxlength="4">
+          </div>
+          <div class="form-group">
+            <label for="edit-event-image">Image Filename</label>
+            <input type="text" id="edit-event-image">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="edit-event-description">Description *</label>
+          <textarea id="edit-event-description" rows="3" required></textarea>
+        </div>
+        <div style="display: flex; gap: var(--space-md); justify-content: flex-end;">
+          <button type="button" class="btn btn--ghost" onclick="closeEditEventModal()">Cancel</button>
+          <button type="submit" class="btn btn--primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -644,6 +808,7 @@
             <div class="event-item__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''} • ${event.tag || 'Event'}</div>
           </div>
           <div class="event-item__actions">
+            <button class="btn btn--ghost btn--small" onclick="openEditEventModal('${event.id}')">Edit</button>
             <button class="btn btn--danger btn--small" onclick="deleteEvent('${event.id}')">Delete</button>
           </div>
         </li>
@@ -719,6 +884,7 @@
                 <div class="event-item__meta">${event.schedule} • ${getAccessLabel(event)}</div>
               </div>
               <div class="event-item__actions">
+                <button class="btn btn--ghost btn--small" onclick="openEditRecurringModal('${event.id}')">Edit</button>
                 <button class="btn btn--danger btn--small" onclick="deleteRecurring('${event.id}')">Delete</button>
               </div>
             </li>
@@ -904,6 +1070,128 @@
         console.error('Error deleting message:', error);
       }
     }
+
+    // ===== EDIT RECURRING EVENT MODAL =====
+    
+    async function openEditRecurringModal(eventId) {
+      const modal = document.getElementById('edit-recurring-modal');
+      
+      try {
+        const doc = await db.collection('recurring-events').doc(eventId).get();
+        if (!doc.exists) {
+          alert('Event not found');
+          return;
+        }
+        
+        const event = doc.data();
+        
+        document.getElementById('edit-recurring-id').value = eventId;
+        document.getElementById('edit-recurring-title').value = event.title || '';
+        document.getElementById('edit-recurring-schedule').value = event.schedule || '';
+        document.getElementById('edit-recurring-emoji').value = event.emoji || '';
+        document.getElementById('edit-recurring-description').value = event.description || '';
+        document.getElementById('edit-recurring-sort').value = event.sortOrder || 10;
+        
+        // Handle access level (with fallback for old data)
+        let accessLevel = event.accessLevel;
+        if (!accessLevel) {
+          accessLevel = event.openToAll ? 'open' : 'guests';
+        }
+        document.getElementById('edit-recurring-access').value = accessLevel;
+        
+        modal.classList.remove('hidden');
+      } catch (error) {
+        console.error('Error loading event:', error);
+        alert('Error loading event. Please try again.');
+      }
+    }
+    
+    function closeEditModal() {
+      document.getElementById('edit-recurring-modal').classList.add('hidden');
+    }
+    
+    document.getElementById('edit-recurring-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const eventId = document.getElementById('edit-recurring-id').value;
+      const eventData = {
+        title: document.getElementById('edit-recurring-title').value,
+        schedule: document.getElementById('edit-recurring-schedule').value,
+        emoji: document.getElementById('edit-recurring-emoji').value || '📅',
+        accessLevel: document.getElementById('edit-recurring-access').value,
+        description: document.getElementById('edit-recurring-description').value,
+        sortOrder: parseInt(document.getElementById('edit-recurring-sort').value) || 10
+      };
+      
+      try {
+        await db.collection('recurring-events').doc(eventId).update(eventData);
+        closeEditModal();
+        loadRecurringEvents();
+        alert('Event updated successfully!');
+      } catch (error) {
+        console.error('Error updating event:', error);
+        alert('Error updating event. Please try again.');
+      }
+    });
+
+    // ===== EDIT SPECIAL EVENT MODAL =====
+    
+    async function openEditEventModal(eventId) {
+      const modal = document.getElementById('edit-event-modal');
+      
+      try {
+        const doc = await db.collection('events').doc(eventId).get();
+        if (!doc.exists) {
+          alert('Event not found');
+          return;
+        }
+        
+        const event = doc.data();
+        
+        document.getElementById('edit-event-id').value = eventId;
+        document.getElementById('edit-event-title').value = event.title || '';
+        document.getElementById('edit-event-date').value = event.date || '';
+        document.getElementById('edit-event-time').value = event.time || '';
+        document.getElementById('edit-event-tag').value = event.tag || 'Open to All';
+        document.getElementById('edit-event-emoji').value = event.emoji || '';
+        document.getElementById('edit-event-image').value = event.image || '';
+        document.getElementById('edit-event-description').value = event.description || '';
+        
+        modal.classList.remove('hidden');
+      } catch (error) {
+        console.error('Error loading event:', error);
+        alert('Error loading event. Please try again.');
+      }
+    }
+    
+    function closeEditEventModal() {
+      document.getElementById('edit-event-modal').classList.add('hidden');
+    }
+    
+    document.getElementById('edit-event-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const eventId = document.getElementById('edit-event-id').value;
+      const eventData = {
+        title: document.getElementById('edit-event-title').value,
+        date: document.getElementById('edit-event-date').value,
+        time: document.getElementById('edit-event-time').value,
+        tag: document.getElementById('edit-event-tag').value,
+        emoji: document.getElementById('edit-event-emoji').value || '📅',
+        image: document.getElementById('edit-event-image').value,
+        description: document.getElementById('edit-event-description').value
+      };
+      
+      try {
+        await db.collection('events').doc(eventId).update(eventData);
+        closeEditEventModal();
+        loadEvents();
+        alert('Event updated successfully!');
+      } catch (error) {
+        console.error('Error updating event:', error);
+        alert('Error updating event. Please try again.');
+      }
+    });
   </script>
 </body>
 </html>

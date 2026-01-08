@@ -33,6 +33,8 @@ const EventsManager = {
   renderEventCard(event) {
     const hasDetails = event.details || event.flyerUrl || event.price || event.rsvpUrl;
     const clickAttr = hasDetails ? `onclick="EventsManager.showEventModal('${event.id}')" style="cursor:pointer;"` : '';
+    const accessLabels = { open: 'Open to All', guests: 'Members & Guests', members: 'Members Only' };
+    const accessLabel = accessLabels[event.accessLevel] || event.tag || 'Event';
     
     return `
       <article class="card" ${clickAttr} data-event-id="${event.id}">
@@ -45,7 +47,7 @@ const EventsManager = {
           }
         </div>
         <div class="card__body">
-          <span class="card__tag">${event.tag || 'Event'}</span>
+          <span class="card__tag">${accessLabel}</span>
           <h3 class="card__title">${event.title}</h3>
           <p class="card__text">${event.description}</p>
           <p class="card__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''}</p>
@@ -75,6 +77,8 @@ const EventsManager = {
   renderSpecialEventCard(event) {
     const hasDetails = event.details || event.flyerUrl || event.price || event.rsvpUrl;
     const clickAttr = hasDetails ? `onclick="EventsManager.showEventModal('${event.id}')" style="cursor:pointer;"` : '';
+    const accessLabels = { open: 'Open to All', guests: 'Members & Guests', members: 'Members Only' };
+    const accessLabel = accessLabels[event.accessLevel] || event.tag || 'Event';
     
     return `
       <article class="card" ${clickAttr} data-event-id="${event.id}">
@@ -87,7 +91,7 @@ const EventsManager = {
           }
         </div>
         <div class="card__body">
-          <span class="card__tag">${event.tag || 'Event'}</span>
+          <span class="card__tag">${accessLabel}</span>
           <h3 class="card__title">${event.title}</h3>
           <p class="card__text">${event.description}</p>
           <p class="card__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''}</p>
@@ -139,10 +143,12 @@ const EventsManager = {
         document.head.appendChild(style);
       }
       
+      const accessLabels = { open: 'Open to All', guests: 'Members & Guests', members: 'Members Only' };
+      const accessLabel = accessLabels[event.accessLevel] || event.tag || 'Event';
       const body = modal.querySelector('.event-modal__body');
       body.innerHTML = `
         ${event.flyerUrl ? `<img src="${event.flyerUrl}" alt="${event.title}" class="event-modal__flyer">` : ''}
-        <span class="event-modal__tag">${event.tag || 'Event'}</span>
+        <span class="event-modal__tag">${accessLabel}</span>
         <h2 class="event-modal__title">${event.emoji || '📅'} ${event.title}</h2>
         <p class="event-modal__meta">${formatDate(event.date)}${event.time ? ' • ' + event.time : ''}</p>
         ${event.price ? `<p class="event-modal__price">${event.price}</p>` : ''}

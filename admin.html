@@ -611,7 +611,12 @@
       const accessLabels = { open: 'Open to All', guests: 'Members & Guests', members: 'Members Only' };
       const accessLabel = accessLabels[event.accessLevel] || 'Open to All';
       const tagLabel = event.tag ? ` • ${event.tag}` : '';
-      return `<li class="event-item ${isPast ? 'event-item--past' : ''}"><div class="event-item__info"><div class="event-item__title">${event.emoji || '📅'} ${event.title}</div><div class="event-item__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''} • ${accessLabel}${tagLabel}</div>${flyerHtml}</div><div class="event-item__actions"><button class="btn btn--ghost btn--small" onclick="editEvent('${event.id}')">Edit</button><button class="btn btn--danger btn--small" onclick="deleteEvent('${event.id}')">Delete</button></div></li>`;
+      const shareBtn = !isPast ? `<button class="btn btn--ghost btn--small" onclick='shareEvent(${JSON.stringify(event).replace(/'/g, "&#39;")})'>Share</button>` : '';
+      return `<li class="event-item ${isPast ? 'event-item--past' : ''}"><div class="event-item__info"><div class="event-item__title">${event.emoji || '📅'} ${event.title}</div><div class="event-item__meta">${formatDateShort(event.date)}${event.time ? ' • ' + event.time : ''} • ${accessLabel}${tagLabel}</div>${flyerHtml}</div><div class="event-item__actions">${shareBtn}<button class="btn btn--ghost btn--small" onclick="editEvent('${event.id}')">Edit</button><button class="btn btn--danger btn--small" onclick="deleteEvent('${event.id}')">Delete</button></div></li>`;
+    }
+
+    function shareEvent(event) {
+      showEventShareModal(event);
     }
 
     let editingEventId = null;
@@ -714,10 +719,11 @@
           await db.collection('events').add(eventData);
         }
         
+        const savedEventData = { ...eventData };
         resetEventForm();
         progressEl.classList.add('hidden');
         loadEvents();
-        alert(editingEventId ? 'Event updated!' : 'Event added!');
+        showEventShareModal(savedEventData);
       } catch (error) { 
         console.error(error);
         alert('Error: ' + error.message); 
@@ -729,6 +735,50 @@
     async function deleteEvent(id) {
       if (!confirm('Delete this event?')) return;
       try { await db.collection('events').doc(id).delete(); loadEvents(); } catch (e) { alert('Error deleting'); }
+    }
+
+    function showEventShareModal(event) {
+      // Format date for display
+      const eventDate = new Date(event.date + 'T00:00:00');
+      const dateStr = eventDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      
+      // Build share text
+      const shareText = `${event.emoji || '📅'} ${event.title} - ${dateStr}${event.time ? ' at ' + event.time : ''} at Mountainside Elks Lodge #1585!${event.description ? ' ' + event.description : ''}`;
+      const eventsUrl = 'https://sgiordano45.github.io/mountainsideelks/pages/events.html';
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(eventsUrl)}&quote=${encodeURIComponent(shareText)}`;
+      
+      // Create modal
+      const modal = document.createElement('div');
+      modal.id = 'share-modal';
+      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem;';
+      modal.innerHTML = `
+        <div style="background:white;border-radius:12px;padding:var(--space-xl);max-width:450px;width:100%;text-align:center;">
+          <div style="font-size:3rem;margin-bottom:var(--space-md);">✅</div>
+          <h3 style="margin-bottom:var(--space-md);">Event Saved!</h3>
+          <p style="color:var(--gray-600);margin-bottom:var(--space-xl);">Would you like to share this event to Facebook?</p>
+          <div style="background:var(--gray-50);border-radius:8px;padding:var(--space-md);margin-bottom:var(--space-xl);text-align:left;font-size:0.9rem;">
+            <strong>${event.emoji || '📅'} ${event.title}</strong><br>
+            <span style="color:var(--gray-500);">${dateStr}${event.time ? ' • ' + event.time : ''}</span>
+          </div>
+          <div style="display:flex;gap:var(--space-sm);justify-content:center;flex-wrap:wrap;">
+            <a href="${facebookUrl}" target="_blank" rel="noopener" class="btn btn--primary" style="background:#1877f2;border-color:#1877f2;">
+              📘 Share to Facebook
+            </a>
+            <button class="btn btn--ghost" onclick="closeShareModal()">Done</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Close on backdrop click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeShareModal();
+      });
+    }
+
+    function closeShareModal() {
+      const modal = document.getElementById('share-modal');
+      if (modal) modal.remove();
     }
 
     // ==========================================

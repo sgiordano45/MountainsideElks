@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Member Portal | Mountainside Elks Lodge #1585</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  
+  <style>
+    .portal-header {
+      background: var(--navy);
+      color: var(--white);
+      padding: var(--space-md) var(--space-xl);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .portal-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    .portal-header__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    .portal-header__brand img {
+      height: 36px;
+    }
+    .portal-nav {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .portal-nav__link {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-weight: 500;
+      padding: var(--space-xs) 0;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition-fast);
+    }
+    .portal-nav__link:hover,
+    .portal-nav__link--active {
+      color: var(--white);
+      border-bottom-color: var(--gold);
+    }
+    .portal-nav__user {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      color: var(--gray-300);
+      font-size: 0.9rem;
+    }
+    .portal-nav__avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--navy-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .portal-nav__avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .portal-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+    }
+    .welcome-section {
+      margin-bottom: var(--space-2xl);
+    }
+    .welcome-section__title {
+      font-size: 1.75rem;
+      margin-bottom: var(--space-sm);
+    }
+    .welcome-section__subtitle {
+      color: var(--gray-500);
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-xl);
+    }
+    .dashboard-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      padding: var(--space-xl);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .dashboard-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .dashboard-card__icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-md);
+    }
+    .dashboard-card__title {
+      font-size: 1.25rem;
+      margin-bottom: var(--space-sm);
+    }
+    .dashboard-card__desc {
+      color: var(--gray-500);
+      margin-bottom: var(--space-lg);
+      font-size: 0.9375rem;
+    }
+    .dashboard-card__link {
+      color: var(--navy);
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .dashboard-card__link:hover {
+      color: var(--gold-dark);
+    }
+    .events-preview {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      padding: var(--space-xl);
+      margin-top: var(--space-2xl);
+    }
+    .events-preview__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-lg);
+    }
+    .events-preview__title {
+      font-size: 1.25rem;
+    }
+    .event-preview-item {
+      display: flex;
+      gap: var(--space-lg);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .event-preview-item:last-child {
+      border-bottom: none;
+    }
+    .event-preview-item__date {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 8px;
+      padding: var(--space-sm) var(--space-md);
+      text-align: center;
+      min-width: 60px;
+    }
+    .event-preview-item__month {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+    .event-preview-item__day {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .event-preview-item__info {
+      flex: 1;
+    }
+    .event-preview-item__title {
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+    .event-preview-item__meta {
+      font-size: 0.875rem;
+      color: var(--gray-500);
+    }
+    .event-preview-item__tag {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy-dark);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: var(--space-sm);
+    }
+    .loading-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-50);
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <p>Loading...</p>
+  </div>
+
+  <!-- Main Content (hidden until auth verified) -->
+  <div id="main-content" class="hidden">
+    
+    <!-- Portal Header -->
+    <header class="portal-header">
+      <div class="portal-header__inner">
+        <div class="portal-header__brand">
+          <img src="../images/elks-logo.png" alt="Elks Logo" onerror="this.style.display='none'">
+          <span>🦌 Member Portal</span>
+        </div>
+        <nav class="portal-nav">
+          <a href="member-dashboard.html" class="portal-nav__link portal-nav__link--active">Dashboard</a>
+          <a href="directory.html" class="portal-nav__link">Directory</a>
+          <a href="documents.html" class="portal-nav__link">Documents</a>
+          <a href="profile.html" class="portal-nav__link">My Profile</a>
+          <span class="portal-nav__user">
+            <span class="portal-nav__avatar" id="user-avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:20px;height:20px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
+            </span>
+            <span id="user-name">Member</span>
+          </span>
+          <a href="../index.html" class="portal-nav__link" style="color: var(--gray-400);">Main Site</a>
+          <button onclick="signOut()" class="btn btn--secondary btn--small">Logout</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <main class="portal-container">
+      
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <h1 class="welcome-section__title">Welcome back, <span id="welcome-name">Member</span>!</h1>
+        <p class="welcome-section__subtitle">Mountainside Elks Lodge #1585 Member Portal</p>
+      </div>
+
+      <!-- Quick Links Grid -->
+      <div class="dashboard-grid">
+        
+        <div class="dashboard-card">
+          <div class="dashboard-card__icon">👥</div>
+          <h2 class="dashboard-card__title">Member Directory</h2>
+          <p class="dashboard-card__desc">Find contact information for fellow lodge members.</p>
+          <a href="directory.html" class="dashboard-card__link">
+            Browse Directory →
+          </a>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="dashboard-card__icon">📄</div>
+          <h2 class="dashboard-card__title">Lodge Documents</h2>
+          <p class="dashboard-card__desc">Access bylaws, meeting minutes, forms, and other lodge documents.</p>
+          <a href="documents.html" class="dashboard-card__link">
+            View Documents →
+          </a>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="dashboard-card__icon">👤</div>
+          <h2 class="dashboard-card__title">My Profile</h2>
+          <p class="dashboard-card__desc">Update your contact information and directory visibility settings.</p>
+          <a href="profile.html" class="dashboard-card__link">
+            Edit Profile →
+          </a>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="dashboard-card__icon">📅</div>
+          <h2 class="dashboard-card__title">Events Calendar</h2>
+          <p class="dashboard-card__desc">View upcoming lodge events including members-only activities.</p>
+          <a href="events.html" class="dashboard-card__link">
+            See All Events →
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Upcoming Members-Only Events -->
+      <div class="events-preview">
+        <div class="events-preview__header">
+          <h2 class="events-preview__title">Upcoming Members-Only Events</h2>
+          <a href="events.html" class="dashboard-card__link">View All →</a>
+        </div>
+        <div id="members-events-list">
+          <p style="color: var(--gray-500);">Loading events...</p>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  
+  <script>
+    const auth = firebase.auth();
+    
+    // Check auth state
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      try {
+        // Check member status
+        const memberDoc = await db.collection('members').doc(user.uid).get();
+        
+        if (!memberDoc.exists || memberDoc.data().status !== 'active') {
+          window.location.href = 'login.html';
+          return;
+        }
+        
+        const member = memberDoc.data();
+        
+        // Update UI with member info
+        document.getElementById('welcome-name').textContent = member.name.split(' ')[0];
+        document.getElementById('user-name').textContent = member.name;
+        
+        if (member.photoUrl) {
+          document.getElementById('user-avatar').innerHTML = `<img src="${member.photoUrl}" alt="${member.name}">`;
+        }
+        
+        // Show main content
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('main-content').classList.remove('hidden');
+        
+        // Load members-only events
+        loadMembersOnlyEvents();
+        
+      } catch (error) {
+        console.error('Error loading member data:', error);
+        window.location.href = 'login.html';
+      }
+    });
+    
+    async function loadMembersOnlyEvents() {
+      const container = document.getElementById('members-events-list');
+      const today = new Date().toISOString().split('T')[0];
+      
+      try {
+        const snapshot = await db.collection('events')
+          .where('date', '>=', today)
+          .orderBy('date', 'asc')
+          .limit(10)
+          .get();
+        
+        const events = snapshot.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .filter(e => e.accessLevel === 'members' || e.accessLevel === 'guests');
+        
+        if (events.length === 0) {
+          container.innerHTML = '<p style="color: var(--gray-500);">No upcoming members-only events scheduled.</p>';
+          return;
+        }
+        
+        container.innerHTML = events.slice(0, 5).map(event => {
+          const date = new Date(event.date + 'T00:00:00');
+          const month = date.toLocaleDateString('en-US', { month: 'short' });
+          const day = date.getDate();
+          const accessLabel = event.accessLevel === 'members' ? 'Members Only' : 'Members & Guests';
+          
+          return `
+            <div class="event-preview-item">
+              <div class="event-preview-item__date">
+                <div class="event-preview-item__month">${month}</div>
+                <div class="event-preview-item__day">${day}</div>
+              </div>
+              <div class="event-preview-item__info">
+                <div class="event-preview-item__title">
+                  ${event.emoji || '📅'} ${event.title}
+                  <span class="event-preview-item__tag">${accessLabel}</span>
+                </div>
+                <div class="event-preview-item__meta">${event.time || 'Time TBD'} • ${event.description || ''}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+      } catch (error) {
+        console.error('Error loading events:', error);
+        container.innerHTML = '<p style="color: var(--gray-500);">Error loading events.</p>';
+      }
+    }
+    
+    function signOut() {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
+    }
+  </script>
+</body>
+</html>

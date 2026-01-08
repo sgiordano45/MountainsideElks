@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>My Profile | Mountainside Elks Lodge #1585</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  
+  <style>
+    .portal-header {
+      background: var(--navy);
+      color: var(--white);
+      padding: var(--space-md) var(--space-xl);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .portal-header__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    .portal-header__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    .portal-header__brand img {
+      height: 36px;
+    }
+    .portal-nav {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .portal-nav__link {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-weight: 500;
+      padding: var(--space-xs) 0;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition-fast);
+    }
+    .portal-nav__link:hover,
+    .portal-nav__link--active {
+      color: var(--white);
+      border-bottom-color: var(--gold);
+    }
+    .portal-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+    }
+    .page-header {
+      margin-bottom: var(--space-2xl);
+    }
+    .page-header__title {
+      font-size: 1.75rem;
+      margin-bottom: var(--space-sm);
+    }
+    .page-header__subtitle {
+      color: var(--gray-500);
+    }
+    .profile-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-xl);
+    }
+    .profile-card__title {
+      font-size: 1.125rem;
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color var(--transition-fast);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--navy);
+    }
+    .form-group input:disabled {
+      background: var(--gray-50);
+      color: var(--gray-500);
+    }
+    .form-hint {
+      font-size: 0.8125rem;
+      color: var(--gray-500);
+      margin-top: var(--space-xs);
+    }
+    .photo-upload {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+      flex-wrap: wrap;
+    }
+    .photo-upload__preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .photo-upload__preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .photo-upload__preview svg {
+      width: 40px;
+      height: 40px;
+      color: var(--gray-400);
+    }
+    .photo-upload__controls {
+      flex: 1;
+    }
+    .photo-upload__input {
+      display: none;
+    }
+    .privacy-section {
+      background: var(--gray-50);
+      border-radius: 8px;
+      padding: var(--space-lg);
+    }
+    .privacy-section__title {
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .privacy-section__title svg {
+      width: 20px;
+      height: 20px;
+      color: var(--navy);
+    }
+    .toggle-group {
+      margin-bottom: var(--space-md);
+    }
+    .toggle-group:last-child {
+      margin-bottom: 0;
+    }
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      cursor: pointer;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--gray-300);
+      transition: 0.3s;
+      border-radius: 26px;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: var(--navy);
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+    .toggle-text {
+      flex: 1;
+    }
+    .toggle-text__label {
+      font-weight: 500;
+    }
+    .toggle-text__hint {
+      font-size: 0.8125rem;
+      color: var(--gray-500);
+    }
+    .alert {
+      padding: var(--space-md) var(--space-lg);
+      border-radius: 6px;
+      margin-bottom: var(--space-lg);
+    }
+    .alert--success {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+    .alert--error {
+      background: #fed7d7;
+      color: #822727;
+    }
+    .loading-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-50);
+    }
+    .hidden { display: none !important; }
+    .upload-progress {
+      margin-top: var(--space-sm);
+      font-size: 0.875rem;
+      color: var(--gray-500);
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <p>Loading...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" class="hidden">
+    
+    <!-- Portal Header -->
+    <header class="portal-header">
+      <div class="portal-header__inner">
+        <div class="portal-header__brand">
+          <img src="../images/elks-logo.png" alt="Elks Logo" onerror="this.style.display='none'">
+          <span>🦌 Member Portal</span>
+        </div>
+        <nav class="portal-nav">
+          <a href="member-dashboard.html" class="portal-nav__link">Dashboard</a>
+          <a href="directory.html" class="portal-nav__link">Directory</a>
+          <a href="documents.html" class="portal-nav__link">Documents</a>
+          <a href="profile.html" class="portal-nav__link portal-nav__link--active">My Profile</a>
+          <a href="../index.html" class="portal-nav__link" style="color: var(--gray-400);">Main Site</a>
+          <button onclick="signOut()" class="btn btn--secondary btn--small">Logout</button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Profile Content -->
+    <main class="portal-container">
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-header__title">My Profile</h1>
+        <p class="page-header__subtitle">Update your information and control what other members can see</p>
+      </div>
+
+      <!-- Alert Area -->
+      <div id="profile-alert" class="hidden"></div>
+
+      <!-- Profile Photo -->
+      <div class="profile-card">
+        <h2 class="profile-card__title">Profile Photo</h2>
+        <div class="photo-upload">
+          <div class="photo-upload__preview" id="photo-preview">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
+          </div>
+          <div class="photo-upload__controls">
+            <input type="file" id="photo-input" class="photo-upload__input" accept="image/*">
+            <button type="button" class="btn btn--secondary btn--small" onclick="document.getElementById('photo-input').click()">
+              Upload Photo
+            </button>
+            <button type="button" class="btn btn--ghost btn--small" id="remove-photo-btn" style="margin-left: var(--space-sm); display: none;">
+              Remove
+            </button>
+            <p class="form-hint">Square photos work best. Max 5MB.</p>
+            <p id="photo-upload-progress" class="upload-progress hidden"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="profile-card">
+        <h2 class="profile-card__title">Contact Information</h2>
+        <form id="profile-form">
+          <div class="form-group">
+            <label for="profile-name">Full Name</label>
+            <input type="text" id="profile-name" required>
+          </div>
+          <div class="form-group">
+            <label for="profile-email">Email Address</label>
+            <input type="email" id="profile-email" disabled>
+            <p class="form-hint">Email cannot be changed. Contact an administrator if you need to update it.</p>
+          </div>
+          <div class="form-group">
+            <label for="profile-phone">Phone Number</label>
+            <input type="tel" id="profile-phone" placeholder="(908) 555-1234">
+            <p class="form-hint">Optional. Will only be visible if you enable sharing below.</p>
+          </div>
+          <button type="submit" class="btn btn--primary">Save Changes</button>
+        </form>
+      </div>
+
+      <!-- Privacy Settings -->
+      <div class="profile-card">
+        <h2 class="profile-card__title">Directory Visibility</h2>
+        <div class="privacy-section">
+          <div class="privacy-section__title">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Control what other members can see
+          </div>
+          
+          <div class="toggle-group">
+            <label class="toggle-label">
+              <span class="toggle-switch">
+                <input type="checkbox" id="toggle-directory">
+                <span class="toggle-slider"></span>
+              </span>
+              <span class="toggle-text">
+                <span class="toggle-text__label">Show me in member directory</span>
+                <span class="toggle-text__hint">Your name will be visible to other members</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <label class="toggle-label">
+              <span class="toggle-switch">
+                <input type="checkbox" id="toggle-email">
+                <span class="toggle-slider"></span>
+              </span>
+              <span class="toggle-text">
+                <span class="toggle-text__label">Share my email address</span>
+                <span class="toggle-text__hint">Other members can see your email</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <label class="toggle-label">
+              <span class="toggle-switch">
+                <input type="checkbox" id="toggle-phone">
+                <span class="toggle-slider"></span>
+              </span>
+              <span class="toggle-text">
+                <span class="toggle-text__label">Share my phone number</span>
+                <span class="toggle-text__hint">Other members can see your phone number</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <label class="toggle-label">
+              <span class="toggle-switch">
+                <input type="checkbox" id="toggle-photo">
+                <span class="toggle-slider"></span>
+              </span>
+              <span class="toggle-text">
+                <span class="toggle-text__label">Share my photo</span>
+                <span class="toggle-text__hint">Your photo will appear in the directory</span>
+              </span>
+            </label>
+          </div>
+
+          <p style="margin-top: var(--space-lg); font-size: 0.875rem; color: var(--gray-500);">
+            Your name is always visible to other members when you're in the directory.
+          </p>
+        </div>
+        <div style="margin-top: var(--space-lg);">
+          <button type="button" class="btn btn--primary" id="save-privacy-btn">Save Privacy Settings</button>
+        </div>
+      </div>
+
+      <!-- Account Info (read-only) -->
+      <div class="profile-card">
+        <h2 class="profile-card__title">Account Information</h2>
+        <div style="display: grid; gap: var(--space-md); font-size: 0.9375rem;">
+          <div>
+            <strong>Member Since:</strong> <span id="member-since">—</span>
+          </div>
+          <div>
+            <strong>Account Status:</strong> <span id="account-status" style="color: #38a169;">Active</span>
+          </div>
+          <div id="officer-info" style="display: none;">
+            <strong>Officer Title:</strong> <span id="officer-title">—</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  
+  <script>
+    const auth = firebase.auth();
+    const storage = firebase.storage();
+    let currentUser = null;
+    let currentMember = null;
+
+    // Check auth state
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      currentUser = user;
+      
+      try {
+        const memberDoc = await db.collection('members').doc(user.uid).get();
+        
+        if (!memberDoc.exists || memberDoc.data().status !== 'active') {
+          window.location.href = 'login.html';
+          return;
+        }
+        
+        currentMember = memberDoc.data();
+        populateForm();
+        
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('main-content').classList.remove('hidden');
+        
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        window.location.href = 'login.html';
+      }
+    });
+
+    function populateForm() {
+      // Contact info
+      document.getElementById('profile-name').value = currentMember.name || '';
+      document.getElementById('profile-email').value = currentMember.email || '';
+      document.getElementById('profile-phone').value = currentMember.phone || '';
+      
+      // Photo
+      if (currentMember.photoUrl) {
+        document.getElementById('photo-preview').innerHTML = `<img src="${currentMember.photoUrl}" alt="Profile photo">`;
+        document.getElementById('remove-photo-btn').style.display = 'inline-block';
+      }
+      
+      // Privacy toggles
+      document.getElementById('toggle-directory').checked = currentMember.showInDirectory !== false;
+      document.getElementById('toggle-email').checked = currentMember.shareEmail === true;
+      document.getElementById('toggle-phone').checked = currentMember.sharePhone === true;
+      document.getElementById('toggle-photo').checked = currentMember.sharePhoto === true;
+      
+      // Account info
+      document.getElementById('member-since').textContent = currentMember.memberSince || 'Not set';
+      
+      if (currentMember.isOfficer && currentMember.officerTitle) {
+        document.getElementById('officer-info').style.display = 'block';
+        document.getElementById('officer-title').textContent = currentMember.officerTitle;
+      }
+    }
+
+    function showAlert(message, type = 'success') {
+      const alert = document.getElementById('profile-alert');
+      alert.className = `alert alert--${type}`;
+      alert.textContent = message;
+      alert.classList.remove('hidden');
+      alert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      setTimeout(() => {
+        alert.classList.add('hidden');
+      }, 5000);
+    }
+
+    // Profile form submission
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.textContent = 'Saving...';
+      submitBtn.disabled = true;
+      
+      try {
+        await db.collection('members').doc(currentUser.uid).update({
+          name: document.getElementById('profile-name').value.trim(),
+          phone: document.getElementById('profile-phone').value.trim(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        showAlert('Profile updated successfully!');
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        showAlert('Error updating profile. Please try again.', 'error');
+      }
+      
+      submitBtn.textContent = 'Save Changes';
+      submitBtn.disabled = false;
+    });
+
+    // Privacy settings
+    document.getElementById('save-privacy-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('save-privacy-btn');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+      
+      try {
+        await db.collection('members').doc(currentUser.uid).update({
+          showInDirectory: document.getElementById('toggle-directory').checked,
+          shareEmail: document.getElementById('toggle-email').checked,
+          sharePhone: document.getElementById('toggle-phone').checked,
+          sharePhoto: document.getElementById('toggle-photo').checked,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        showAlert('Privacy settings updated!');
+      } catch (error) {
+        console.error('Error updating privacy settings:', error);
+        showAlert('Error updating settings. Please try again.', 'error');
+      }
+      
+      btn.textContent = 'Save Privacy Settings';
+      btn.disabled = false;
+    });
+
+    // Photo upload
+    document.getElementById('photo-input').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      if (file.size > 5 * 1024 * 1024) {
+        showAlert('Photo must be less than 5MB.', 'error');
+        return;
+      }
+      
+      const progressEl = document.getElementById('photo-upload-progress');
+      progressEl.textContent = 'Uploading...';
+      progressEl.classList.remove('hidden');
+      
+      try {
+        // Upload to Firebase Storage
+        const timestamp = Date.now();
+        const path = `member-photos/${currentUser.uid}_${timestamp}`;
+        const ref = storage.ref(path);
+        const snapshot = await ref.put(file);
+        const photoUrl = await snapshot.ref.getDownloadURL();
+        
+        // Update Firestore
+        await db.collection('members').doc(currentUser.uid).update({
+          photoUrl: photoUrl,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        // Update UI
+        document.getElementById('photo-preview').innerHTML = `<img src="${photoUrl}" alt="Profile photo">`;
+        document.getElementById('remove-photo-btn').style.display = 'inline-block';
+        progressEl.classList.add('hidden');
+        showAlert('Photo uploaded successfully!');
+        
+      } catch (error) {
+        console.error('Error uploading photo:', error);
+        progressEl.classList.add('hidden');
+        showAlert('Error uploading photo. Please try again.', 'error');
+      }
+    });
+
+    // Remove photo
+    document.getElementById('remove-photo-btn').addEventListener('click', async () => {
+      if (!confirm('Remove your profile photo?')) return;
+      
+      try {
+        await db.collection('members').doc(currentUser.uid).update({
+          photoUrl: null,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        document.getElementById('photo-preview').innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+          </svg>
+        `;
+        document.getElementById('remove-photo-btn').style.display = 'none';
+        showAlert('Photo removed.');
+        
+      } catch (error) {
+        console.error('Error removing photo:', error);
+        showAlert('Error removing photo. Please try again.', 'error');
+      }
+    });
+
+    function signOut() {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
+    }
+  </script>
+</body>
+</html>

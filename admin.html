@@ -508,10 +508,6 @@
   <script src="js/firebase-config.js"></script>
   
   <script>
-    // Simple password protection (not secure, just a basic gate)
-    // For real security, use Firebase Authentication
-    const ADMIN_PASSWORD = 'elks15852026'; // Change this!
-
     // DOM Elements
     const loginScreen = document.getElementById('login-screen');
     const adminDashboard = document.getElementById('admin-dashboard');
@@ -526,20 +522,63 @@
       initAdmin();
     }
 
-    // Login handler
-    loginForm.addEventListener('submit', (e) => {
+    // Login handler - checks password against Firebase
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const password = document.getElementById('admin-password').value;
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
       
-      if (password === ADMIN_PASSWORD) {
-        sessionStorage.setItem('elks-admin-auth', 'true');
-        loginScreen.classList.add('hidden');
-        adminDashboard.classList.remove('hidden');
-        initAdmin();
-      } else {
+      submitBtn.textContent = 'Checking...';
+      submitBtn.disabled = true;
+      loginError.style.display = 'none';
+      
+      try {
+        // Fetch password from Firebase siteConfig collection
+        const doc = await db.collection('siteConfig').doc('admin').get();
+        
+        if (!doc.exists) {
+          // If no config exists yet, create one with default password
+          await db.collection('siteConfig').doc('admin').set({
+            password: 'elks1585',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          // Check against default
+          if (password === 'elks1585') {
+            loginSuccess();
+          } else {
+            loginFail();
+          }
+        } else {
+          const adminConfig = doc.data();
+          if (password === adminConfig.password) {
+            loginSuccess();
+          } else {
+            loginFail();
+          }
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        loginError.textContent = 'Error connecting to database. Please try again.';
         loginError.style.display = 'block';
+        submitBtn.textContent = 'Login';
+        submitBtn.disabled = false;
       }
     });
+    
+    function loginSuccess() {
+      sessionStorage.setItem('elks-admin-auth', 'true');
+      loginScreen.classList.add('hidden');
+      adminDashboard.classList.remove('hidden');
+      initAdmin();
+    }
+    
+    function loginFail() {
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      loginError.textContent = 'Incorrect password. Please try again.';
+      loginError.style.display = 'block';
+      submitBtn.textContent = 'Login';
+      submitBtn.disabled = false;
+    }
 
     // Logout handler
     logoutBtn.addEventListener('click', () => {

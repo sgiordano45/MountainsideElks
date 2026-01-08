@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Member login for Mountainside Elks Lodge #1585">
+  
+  <title>Member Login | Mountainside Elks Lodge #1585</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="icon" type="image/png" href="../images/favicon.png">
+  
+  <style>
+    .auth-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-50);
+      padding: var(--space-xl);
+    }
+    .auth-box {
+      background: var(--white);
+      padding: var(--space-2xl);
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 420px;
+    }
+    .auth-box__logo {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+    .auth-box__logo img {
+      height: 60px;
+      margin-bottom: var(--space-sm);
+    }
+    .auth-box__title {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: var(--space-xs);
+    }
+    .auth-box__subtitle {
+      text-align: center;
+      color: var(--gray-500);
+      margin-bottom: var(--space-xl);
+    }
+    .auth-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--gray-200);
+      margin-bottom: var(--space-xl);
+    }
+    .auth-tab {
+      flex: 1;
+      padding: var(--space-md);
+      border: none;
+      background: none;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .auth-tab:hover {
+      color: var(--navy);
+    }
+    .auth-tab.active {
+      color: var(--navy);
+      border-bottom: 2px solid var(--navy);
+      margin-bottom: -2px;
+    }
+    .auth-form {
+      display: none;
+    }
+    .auth-form.active {
+      display: block;
+    }
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color var(--transition-fast);
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--navy);
+    }
+    .form-hint {
+      font-size: 0.8125rem;
+      color: var(--gray-500);
+      margin-top: var(--space-xs);
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: var(--space-xl) 0;
+      color: var(--gray-400);
+      font-size: 0.875rem;
+    }
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200);
+    }
+    .divider::before { margin-right: var(--space-md); }
+    .divider::after { margin-left: var(--space-md); }
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--gray-200);
+      border-radius: 6px;
+      background: var(--white);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .google-btn:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-300);
+    }
+    .google-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+    .alert {
+      padding: var(--space-md);
+      border-radius: 6px;
+      margin-bottom: var(--space-lg);
+      font-size: 0.9375rem;
+    }
+    .alert--error {
+      background: #fed7d7;
+      color: #822727;
+    }
+    .alert--success {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+    .alert--info {
+      background: #bee3f8;
+      color: #2a4365;
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: var(--space-xl);
+      padding-top: var(--space-xl);
+      border-top: 1px solid var(--gray-100);
+    }
+    .auth-footer a {
+      color: var(--navy);
+      font-weight: 600;
+    }
+    .hidden { display: none !important; }
+    
+    /* Pending state */
+    .pending-message {
+      text-align: center;
+      padding: var(--space-xl);
+    }
+    .pending-message__icon {
+      font-size: 4rem;
+      margin-bottom: var(--space-lg);
+    }
+    .pending-message__title {
+      font-size: 1.25rem;
+      margin-bottom: var(--space-md);
+    }
+    .pending-message__text {
+      color: var(--gray-600);
+      margin-bottom: var(--space-xl);
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="auth-container">
+    <div class="auth-box">
+      
+      <!-- Logo -->
+      <div class="auth-box__logo">
+        <img src="../images/elks-logo.png" alt="Elks Logo" onerror="this.style.display='none'">
+        <h1 class="auth-box__title">🦌 Member Portal</h1>
+        <p class="auth-box__subtitle">Mountainside Elks Lodge #1585</p>
+      </div>
+      
+      <!-- Auth Content (shown when not logged in) -->
+      <div id="auth-content">
+        
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Sign In</button>
+          <button class="auth-tab" data-tab="register">Register</button>
+        </div>
+        
+        <!-- Alert Area -->
+        <div id="auth-alert" class="hidden"></div>
+        
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form active">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn--primary" style="width: 100%;">Sign In</button>
+          <p style="text-align: center; margin-top: var(--space-md);">
+            <a href="#" id="forgot-password-link" style="color: var(--navy); font-size: 0.875rem;">Forgot password?</a>
+          </p>
+        </form>
+        
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form">
+          <div class="form-group">
+            <label for="register-name">Full Name *</label>
+            <input type="text" id="register-name" required placeholder="John Smith">
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email Address *</label>
+            <input type="email" id="register-email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label for="register-password">Password *</label>
+            <input type="password" id="register-password" required minlength="6" placeholder="••••••••">
+            <p class="form-hint">Minimum 6 characters</p>
+          </div>
+          <div class="form-group">
+            <label for="register-confirm">Confirm Password *</label>
+            <input type="password" id="register-confirm" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn--primary" style="width: 100%;">Create Account</button>
+          <p class="form-hint" style="text-align: center; margin-top: var(--space-md);">
+            Your account will need to be approved by a lodge administrator before you can access the member portal.
+          </p>
+        </form>
+        
+        <!-- Google Sign In -->
+        <div class="divider">or</div>
+        <button id="google-signin" class="google-btn">
+          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+      </div>
+      
+      <!-- Pending Approval Message (shown after registration) -->
+      <div id="pending-content" class="hidden">
+        <div class="pending-message">
+          <div class="pending-message__icon">⏳</div>
+          <h2 class="pending-message__title">Account Pending Approval</h2>
+          <p class="pending-message__text">
+            Thank you for registering! Your account is awaiting approval from a lodge administrator. 
+            You'll receive an email once your account has been approved.
+          </p>
+          <button onclick="signOutUser()" class="btn btn--secondary">Back to Login</button>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="auth-footer">
+        <a href="../index.html">← Back to Website</a>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  
+  <script>
+    const auth = firebase.auth();
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+    
+    // DOM Elements
+    const authContent = document.getElementById('auth-content');
+    const pendingContent = document.getElementById('pending-content');
+    const authAlert = document.getElementById('auth-alert');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    
+    // Tab switching
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab + '-form').classList.add('active');
+        hideAlert();
+      });
+    });
+    
+    // Show/hide alert
+    function showAlert(message, type = 'error') {
+      authAlert.className = `alert alert--${type}`;
+      authAlert.textContent = message;
+      authAlert.classList.remove('hidden');
+    }
+    
+    function hideAlert() {
+      authAlert.classList.add('hidden');
+    }
+    
+    // Check auth state on load
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        // Check member status in Firestore
+        try {
+          const memberDoc = await db.collection('members').doc(user.uid).get();
+          
+          if (!memberDoc.exists) {
+            // New Google user - create pending member record
+            await createMemberRecord(user, user.displayName || 'Unknown');
+            showPendingState();
+          } else {
+            const member = memberDoc.data();
+            
+            if (member.status === 'pending') {
+              showPendingState();
+            } else if (member.status === 'active') {
+              // Redirect to member dashboard
+              window.location.href = 'member-dashboard.html';
+            } else if (member.status === 'inactive') {
+              showAlert('Your account has been deactivated. Please contact the lodge.', 'error');
+              await auth.signOut();
+            }
+          }
+        } catch (error) {
+          console.error('Error checking member status:', error);
+          showAlert('Error checking account status. Please try again.', 'error');
+        }
+      }
+    });
+    
+    function showPendingState() {
+      authContent.classList.add('hidden');
+      pendingContent.classList.remove('hidden');
+    }
+    
+    // Create member record in Firestore
+    async function createMemberRecord(user, name) {
+      await db.collection('members').doc(user.uid).set({
+        uid: user.uid,
+        email: user.email,
+        name: name,
+        phone: '',
+        photoUrl: user.photoURL || '',
+        shareEmail: false,
+        sharePhone: false,
+        sharePhoto: false,
+        showInDirectory: true,
+        status: 'pending',
+        isOfficer: false,
+        officerTitle: null,
+        memberSince: null,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }
+    
+    // Email/Password Login
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+      
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      
+      submitBtn.textContent = 'Signing in...';
+      submitBtn.disabled = true;
+      
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        // Auth state change handler will redirect
+      } catch (error) {
+        console.error('Login error:', error);
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          showAlert('Invalid email or password.');
+        } else if (error.code === 'auth/too-many-requests') {
+          showAlert('Too many failed attempts. Please try again later.');
+        } else {
+          showAlert('Error signing in. Please try again.');
+        }
+        submitBtn.textContent = 'Sign In';
+        submitBtn.disabled = false;
+      }
+    });
+    
+    // Email/Password Registration
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+      
+      const name = document.getElementById('register-name').value.trim();
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const confirm = document.getElementById('register-confirm').value;
+      const submitBtn = registerForm.querySelector('button[type="submit"]');
+      
+      if (password !== confirm) {
+        showAlert('Passwords do not match.');
+        return;
+      }
+      
+      submitBtn.textContent = 'Creating account...';
+      submitBtn.disabled = true;
+      
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        await userCredential.user.updateProfile({ displayName: name });
+        await createMemberRecord(userCredential.user, name);
+        showPendingState();
+      } catch (error) {
+        console.error('Registration error:', error);
+        if (error.code === 'auth/email-already-in-use') {
+          showAlert('An account with this email already exists.');
+        } else if (error.code === 'auth/weak-password') {
+          showAlert('Password is too weak. Please use at least 6 characters.');
+        } else {
+          showAlert('Error creating account. Please try again.');
+        }
+        submitBtn.textContent = 'Create Account';
+        submitBtn.disabled = false;
+      }
+    });
+    
+    // Google Sign In
+    document.getElementById('google-signin').addEventListener('click', async () => {
+      hideAlert();
+      
+      try {
+        await auth.signInWithPopup(googleProvider);
+        // Auth state change handler will handle the rest
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+        if (error.code !== 'auth/popup-closed-by-user') {
+          showAlert('Error signing in with Google. Please try again.');
+        }
+      }
+    });
+    
+    // Forgot Password
+    document.getElementById('forgot-password-link').addEventListener('click', async (e) => {
+      e.preventDefault();
+      hideAlert();
+      
+      const email = document.getElementById('login-email').value;
+      
+      if (!email) {
+        showAlert('Please enter your email address first.', 'info');
+        return;
+      }
+      
+      try {
+        await auth.sendPasswordResetEmail(email);
+        showAlert('Password reset email sent! Check your inbox.', 'success');
+      } catch (error) {
+        console.error('Password reset error:', error);
+        if (error.code === 'auth/user-not-found') {
+          showAlert('No account found with this email.');
+        } else {
+          showAlert('Error sending reset email. Please try again.');
+        }
+      }
+    });
+    
+    // Sign out function
+    async function signOutUser() {
+      await auth.signOut();
+      authContent.classList.remove('hidden');
+      pendingContent.classList.add('hidden');
+      loginForm.reset();
+      registerForm.reset();
+      hideAlert();
+    }
+  </script>
+</body>
+</html>

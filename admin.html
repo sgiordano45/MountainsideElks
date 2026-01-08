@@ -81,6 +81,16 @@
     .hidden { display: none !important; }
     .flyer-preview { max-width: 100px; border-radius: 4px; margin-top: var(--space-sm); }
     .upload-progress { margin-top: var(--space-sm); font-size: 0.875rem; color: var(--gray-500); }
+    .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-lg); }
+    .member-card { background: var(--gray-50); border-radius: 8px; padding: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-md); }
+    .member-card__photo { width: 60px; height: 60px; border-radius: 50%; background: var(--gray-200); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .member-card__photo img { width: 100%; height: 100%; object-fit: cover; }
+    .member-card__photo svg { width: 28px; height: 28px; color: var(--gray-400); }
+    .member-card__info { flex: 1; }
+    .member-card__name { font-weight: 600; margin-bottom: 2px; }
+    .member-card__email { font-size: 0.875rem; color: var(--gray-500); }
+    .member-card__since { font-size: 0.8rem; color: var(--gray-400); margin-top: 4px; }
+    .member-card__actions { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
   </style>
 </head>
 <body>
@@ -117,6 +127,7 @@
         <button class="tab active" data-tab="events">Events</button>
         <button class="tab" data-tab="recurring">Recurring</button>
         <button class="tab" data-tab="officers">Officers</button>
+        <button class="tab" data-tab="members">Members <span class="tab-badge" id="pending-count">0</span></button>
         <button class="tab" data-tab="membership">Membership <span class="tab-badge" id="membership-count">0</span></button>
         <button class="tab" data-tab="inquiries">Hall <span class="tab-badge" id="inquiry-count">0</span></button>
         <button class="tab" data-tab="messages">Messages <span class="tab-badge" id="message-count">0</span></button>
@@ -319,6 +330,25 @@
         </div>
       </div>
 
+      <!-- Members Tab (Portal Users) -->
+      <div id="members-tab" class="tab-content">
+        <div class="admin-card">
+          <h2>Pending Approval</h2>
+          <div id="pending-members-list"><div class="empty-state"><div class="empty-state__icon">⏳</div><p>Loading...</p></div></div>
+        </div>
+        <div class="admin-card">
+          <h2>Active Members</h2>
+          <div style="margin-bottom: var(--space-lg);">
+            <input type="text" id="member-search" placeholder="Search members..." style="width: 100%; max-width: 300px; padding: 0.5rem 1rem; border: 2px solid var(--gray-200); border-radius: 6px;">
+          </div>
+          <div id="active-members-list"><div class="empty-state"><div class="empty-state__icon">👥</div><p>Loading...</p></div></div>
+        </div>
+        <div class="admin-card">
+          <h2>Inactive Members</h2>
+          <div id="inactive-members-list"><div class="empty-state"><div class="empty-state__icon">👤</div><p>Loading...</p></div></div>
+        </div>
+      </div>
+
       <!-- Membership Tab -->
       <div id="membership-tab" class="tab-content">
         <div class="admin-card">
@@ -460,10 +490,12 @@
       loadEvents();
       loadRecurringEvents();
       loadOfficers();
+      loadPortalMembers();
       loadMembershipInquiries();
       loadInquiries();
       loadMessages();
       initImageUploads();
+      initMemberSearch();
     }
 
     // ==========================================
@@ -838,6 +870,253 @@
     async function deleteOfficer(id) {
       if (!confirm('Delete this officer?')) return;
       try { await db.collection('officers').doc(id).delete(); loadOfficers(); } catch (e) { console.error(e); }
+    }
+
+    // ==========================================
+    // PORTAL MEMBERS
+    // ==========================================
+    let allMembers = [];
+    
+    async function loadPortalMembers() {
+      const pendingList = document.getElementById('pending-members-list');
+      const activeList = document.getElementById('active-members-list');
+      const inactiveList = document.getElementById('inactive-members-list');
+      const pendingBadge = document.getElementById('pending-count');
+      
+      try {
+        const snapshot = await db.collection('members').orderBy('createdAt', 'desc').get();
+        allMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        const pending = allMembers.filter(m => m.status === 'pending');
+        const active = allMembers.filter(m => m.status === 'active');
+        const inactive = allMembers.filter(m => m.status === 'inactive');
+        
+        pendingBadge.textContent = pending.length;
+        
+        pendingList.innerHTML = pending.length === 0 
+          ? '<div class="empty-state"><div class="empty-state__icon">✓</div><p>No pending approvals</p></div>'
+          : pending.map(m => renderPendingMember(m)).join('');
+        
+        activeList.innerHTML = active.length === 0
+          ? '<div class="empty-state"><div class="empty-state__icon">👥</div><p>No active members</p></div>'
+          : '<div class="member-grid">' + active.map(m => renderActiveMember(m)).join('') + '</div>';
+        
+        inactiveList.innerHTML = inactive.length === 0
+          ? '<div class="empty-state"><div class="empty-state__icon">👤</div><p>No inactive members</p></div>'
+          : inactive.map(m => renderInactiveMember(m)).join('');
+          
+      } catch (e) { 
+        console.error('Error loading members:', e);
+        pendingList.innerHTML = '<p>Error loading members</p>';
+      }
+    }
+    
+    function renderPendingMember(m) {
+      const date = m.createdAt ? m.createdAt.toDate().toLocaleDateString() : 'Unknown';
+      return `
+        <div class="inquiry-item inquiry-item--new">
+          <div class="inquiry-item__header">
+            <div>
+              <div class="inquiry-item__name">${m.name || 'Unknown'}</div>
+              <div class="inquiry-item__date">Registered: ${date}</div>
+            </div>
+            <span class="status-badge status-badge--new">Pending</span>
+          </div>
+          <div class="inquiry-item__details">
+            <div><strong>Email:</strong> ${m.email}</div>
+          </div>
+          <div class="inquiry-item__actions">
+            <button class="btn btn--small btn--primary" onclick="approveMember('${m.id}')">Approve</button>
+            <button class="btn btn--small btn--danger" onclick="denyMember('${m.id}')">Deny</button>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderActiveMember(m) {
+      const officerBadge = m.isOfficer ? `<span style="background:var(--gold);color:var(--navy-dark);padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:4px;">${m.officerTitle || 'Officer'}</span>` : '';
+      return `
+        <div class="member-card">
+          <div class="member-card__photo">
+            ${m.photoUrl ? `<img src="${m.photoUrl}" alt="${m.name}">` : `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>`}
+          </div>
+          <div class="member-card__info">
+            <div class="member-card__name">${m.name}${officerBadge}</div>
+            <div class="member-card__email">${m.email}</div>
+            ${m.memberSince ? `<div class="member-card__since">Member since ${m.memberSince}</div>` : ''}
+          </div>
+          <div class="member-card__actions">
+            <button class="btn btn--ghost btn--small" onclick="editMemberModal('${m.id}')">Edit</button>
+            <button class="btn btn--ghost btn--small" onclick="deactivateMember('${m.id}')">Deactivate</button>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderInactiveMember(m) {
+      return `
+        <div class="inquiry-item" style="opacity: 0.7;">
+          <div class="inquiry-item__header">
+            <div>
+              <div class="inquiry-item__name">${m.name || 'Unknown'}</div>
+              <div class="inquiry-item__date">${m.email}</div>
+            </div>
+            <span class="status-badge status-badge--closed">Inactive</span>
+          </div>
+          <div class="inquiry-item__actions">
+            <button class="btn btn--small btn--ghost" onclick="reactivateMember('${m.id}')">Reactivate</button>
+            <button class="btn btn--small btn--danger" onclick="deleteMember('${m.id}')">Delete</button>
+          </div>
+        </div>
+      `;
+    }
+    
+    async function approveMember(id) {
+      if (!confirm('Approve this member?')) return;
+      try {
+        await db.collection('members').doc(id).update({ 
+          status: 'active',
+          approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        loadPortalMembers();
+        alert('Member approved! They can now access the member portal.');
+      } catch (e) { console.error(e); alert('Error approving member'); }
+    }
+    
+    async function denyMember(id) {
+      if (!confirm('Deny and delete this registration?')) return;
+      try {
+        await db.collection('members').doc(id).delete();
+        loadPortalMembers();
+      } catch (e) { console.error(e); alert('Error denying member'); }
+    }
+    
+    async function deactivateMember(id) {
+      if (!confirm('Deactivate this member? They will no longer be able to access the member portal.')) return;
+      try {
+        await db.collection('members').doc(id).update({ status: 'inactive' });
+        loadPortalMembers();
+      } catch (e) { console.error(e); alert('Error deactivating member'); }
+    }
+    
+    async function reactivateMember(id) {
+      if (!confirm('Reactivate this member?')) return;
+      try {
+        await db.collection('members').doc(id).update({ status: 'active' });
+        loadPortalMembers();
+      } catch (e) { console.error(e); alert('Error reactivating member'); }
+    }
+    
+    async function deleteMember(id) {
+      if (!confirm('Permanently delete this member? This cannot be undone.')) return;
+      try {
+        await db.collection('members').doc(id).delete();
+        loadPortalMembers();
+      } catch (e) { console.error(e); alert('Error deleting member'); }
+    }
+    
+    function editMemberModal(id) {
+      const member = allMembers.find(m => m.id === id);
+      if (!member) return;
+      
+      const isOfficer = member.isOfficer || false;
+      const officerTitle = member.officerTitle || '';
+      const memberSince = member.memberSince || '';
+      
+      const modal = document.createElement('div');
+      modal.id = 'member-edit-modal';
+      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem;';
+      modal.innerHTML = `
+        <div style="background:white;border-radius:12px;padding:var(--space-xl);max-width:400px;width:100%;max-height:90vh;overflow-y:auto;">
+          <h3 style="margin-bottom:var(--space-lg);">Edit Member: ${member.name}</h3>
+          <div class="form-group">
+            <label>Member Since (Year)</label>
+            <input type="text" id="edit-member-since" value="${memberSince}" placeholder="e.g., 2020">
+          </div>
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:var(--space-sm);cursor:pointer;">
+              <input type="checkbox" id="edit-is-officer" ${isOfficer ? 'checked' : ''} style="width:18px;height:18px;">
+              <span>Lodge Officer</span>
+            </label>
+          </div>
+          <div class="form-group" id="officer-title-group" style="${isOfficer ? '' : 'display:none;'}">
+            <label>Officer Title</label>
+            <select id="edit-officer-title">
+              <option value="">Select title...</option>
+              <option value="Exalted Ruler" ${officerTitle === 'Exalted Ruler' ? 'selected' : ''}>Exalted Ruler</option>
+              <option value="Leading Knight" ${officerTitle === 'Leading Knight' ? 'selected' : ''}>Leading Knight</option>
+              <option value="Loyal Knight" ${officerTitle === 'Loyal Knight' ? 'selected' : ''}>Loyal Knight</option>
+              <option value="Lecturing Knight" ${officerTitle === 'Lecturing Knight' ? 'selected' : ''}>Lecturing Knight</option>
+              <option value="Secretary" ${officerTitle === 'Secretary' ? 'selected' : ''}>Secretary</option>
+              <option value="Treasurer" ${officerTitle === 'Treasurer' ? 'selected' : ''}>Treasurer</option>
+              <option value="Esquire" ${officerTitle === 'Esquire' ? 'selected' : ''}>Esquire</option>
+              <option value="Inner Guard" ${officerTitle === 'Inner Guard' ? 'selected' : ''}>Inner Guard</option>
+              <option value="Tiler" ${officerTitle === 'Tiler' ? 'selected' : ''}>Tiler</option>
+              <option value="Chaplain" ${officerTitle === 'Chaplain' ? 'selected' : ''}>Chaplain</option>
+              <option value="1 Year Trustee" ${officerTitle === '1 Year Trustee' ? 'selected' : ''}>1 Year Trustee</option>
+              <option value="2 Year Trustee" ${officerTitle === '2 Year Trustee' ? 'selected' : ''}>2 Year Trustee</option>
+              <option value="3 Year Trustee" ${officerTitle === '3 Year Trustee' ? 'selected' : ''}>3 Year Trustee</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:var(--space-sm);margin-top:var(--space-xl);">
+            <button class="btn btn--primary" onclick="saveMemberEdit('${id}')">Save</button>
+            <button class="btn btn--ghost" onclick="closeMemberModal()">Cancel</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Toggle officer title visibility
+      document.getElementById('edit-is-officer').addEventListener('change', (e) => {
+        document.getElementById('officer-title-group').style.display = e.target.checked ? '' : 'none';
+      });
+    }
+    
+    async function saveMemberEdit(id) {
+      const memberSince = document.getElementById('edit-member-since').value.trim();
+      const isOfficer = document.getElementById('edit-is-officer').checked;
+      const officerTitle = isOfficer ? document.getElementById('edit-officer-title').value : null;
+      
+      try {
+        await db.collection('members').doc(id).update({
+          memberSince: memberSince || null,
+          isOfficer: isOfficer,
+          officerTitle: officerTitle,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        closeMemberModal();
+        loadPortalMembers();
+      } catch (e) { console.error(e); alert('Error saving member'); }
+    }
+    
+    function closeMemberModal() {
+      const modal = document.getElementById('member-edit-modal');
+      if (modal) modal.remove();
+    }
+    
+    function initMemberSearch() {
+      const searchInput = document.getElementById('member-search');
+      if (!searchInput) return;
+      
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const activeList = document.getElementById('active-members-list');
+        const active = allMembers.filter(m => m.status === 'active');
+        
+        if (!query) {
+          activeList.innerHTML = '<div class="member-grid">' + active.map(m => renderActiveMember(m)).join('') + '</div>';
+          return;
+        }
+        
+        const filtered = active.filter(m => 
+          (m.name && m.name.toLowerCase().includes(query)) ||
+          (m.email && m.email.toLowerCase().includes(query))
+        );
+        
+        activeList.innerHTML = filtered.length === 0
+          ? '<div class="empty-state"><p>No members found</p></div>'
+          : '<div class="member-grid">' + filtered.map(m => renderActiveMember(m)).join('') + '</div>';
+      });
     }
 
     // ==========================================

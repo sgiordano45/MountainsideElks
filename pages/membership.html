@@ -352,7 +352,7 @@
         </div>
         
         <div class="text-center mt-3">
-          <a href="contact.html" class="btn btn--primary">Contact Us to Get Started</a>
+          <a href="#membership-form" class="btn btn--primary">Submit an Inquiry</a>
         </div>
       </div>
     </section>
@@ -446,20 +446,90 @@
       </div>
     </section>
 
+    <!-- Membership Inquiry Form -->
+    <section class="section" id="membership-form">
+      <div class="container container--narrow">
+        <div class="section-header">
+          <h2 class="section-header__title">Interested in Joining?</h2>
+          <p class="section-header__subtitle">
+            Fill out the form below and a member will reach out to answer your questions
+          </p>
+        </div>
+        
+        <form id="membership-inquiry-form" style="max-width: 600px; margin: 0 auto;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);">
+            <div>
+              <label for="name" style="display: block; font-weight: 600; margin-bottom: var(--space-sm);">Name *</label>
+              <input type="text" id="name" name="name" required 
+                style="width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 6px; font-size: 1rem; transition: border-color var(--transition-fast);"
+                onfocus="this.style.borderColor='var(--navy)'" onblur="this.style.borderColor='var(--gray-200)'">
+            </div>
+            
+            <div>
+              <label for="phone" style="display: block; font-weight: 600; margin-bottom: var(--space-sm);">Phone</label>
+              <input type="tel" id="phone" name="phone"
+                style="width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 6px; font-size: 1rem; transition: border-color var(--transition-fast);"
+                onfocus="this.style.borderColor='var(--navy)'" onblur="this.style.borderColor='var(--gray-200)'">
+            </div>
+          </div>
+          
+          <div style="margin-top: var(--space-lg);">
+            <label for="email" style="display: block; font-weight: 600; margin-bottom: var(--space-sm);">Email *</label>
+            <input type="email" id="email" name="email" required
+              style="width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 6px; font-size: 1rem; transition: border-color var(--transition-fast);"
+              onfocus="this.style.borderColor='var(--navy)'" onblur="this.style.borderColor='var(--gray-200)'">
+          </div>
+          
+          <div style="margin-top: var(--space-lg);">
+            <label for="city" style="display: block; font-weight: 600; margin-bottom: var(--space-sm);">City/Town</label>
+            <input type="text" id="city" name="city"
+              style="width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 6px; font-size: 1rem; transition: border-color var(--transition-fast);"
+              onfocus="this.style.borderColor='var(--navy)'" onblur="this.style.borderColor='var(--gray-200)'"
+              placeholder="Where do you live?">
+          </div>
+          
+          <div style="margin-top: var(--space-lg);">
+            <label for="referral" style="display: block; font-weight: 600; margin-bottom: var(--space-sm);">How did you hear about us?</label>
+            <select id="referral" name="referral"
+              style="width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 6px; font-size: 1rem; background: var(--white); transition: border-color var(--transition-fast);"
+              onfocus="this.style.borderColor='var(--navy)'" onblur="this.style.borderColor='var(--gray-200)'">
+              <option value="">Select an option...</option>
+              <option value="friend-family">Friend or Family Member</option>
+              <option value="current-member">Current Elks Member</option>
+              <option value="event">Attended an Event</option>
+              <option value="drive-by">Drove Past the Lodge</option>
+              <option value="online">Online Search</option>
+              <option value="social-media">Social Media</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          
+          <div style="margin-top: var(--space-lg);">
+            <label for="message" style="display: block; font-weight: 600; margin-bottom: var(--space-sm);">Questions or Comments</label>
+            <textarea id="message" name="message" rows="4"
+              style="width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 6px; font-size: 1rem; font-family: inherit; resize: vertical; transition: border-color var(--transition-fast);"
+              onfocus="this.style.borderColor='var(--navy)'" onblur="this.style.borderColor='var(--gray-200)'"
+              placeholder="Anything you'd like us to know or any questions you have..."></textarea>
+          </div>
+          
+          <div style="margin-top: var(--space-xl);">
+            <button type="submit" class="btn btn--primary" style="width: 100%;">Submit Inquiry</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
     <!-- CTA -->
     <section class="section section--navy">
       <div class="container">
         <div class="cta-banner" style="background: transparent; box-shadow: none;">
           <div class="cta-banner__content">
-            <h2 class="cta-banner__title">Ready to Join?</h2>
+            <h2 class="cta-banner__title">Learn More About Elks</h2>
             <p class="cta-banner__text">
-              Take the first step toward becoming part of our lodge family. 
-              We'd love to meet you!
+              Visit the national Elks website for more information about the organization's 
+              history, programs, and impact.
             </p>
-            <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
-              <a href="contact.html" class="btn btn--primary">Contact Us</a>
-              <a href="https://www.elks.org/membership/" target="_blank" rel="noopener" class="btn btn--secondary">National Elks Info</a>
-            </div>
+            <a href="https://www.elks.org/membership/" target="_blank" rel="noopener" class="btn btn--primary">National Elks Info</a>
           </div>
         </div>
       </div>
@@ -530,6 +600,51 @@
     </div>
   </footer>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase-config.js"></script>
+  
   <script src="../js/main.js"></script>
+  
+  <script>
+    // Membership inquiry form handler
+    document.getElementById('membership-inquiry-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Submitting...';
+      submitBtn.disabled = true;
+      
+      const formData = {
+        name: form.querySelector('#name').value,
+        email: form.querySelector('#email').value,
+        phone: form.querySelector('#phone').value || '',
+        city: form.querySelector('#city').value || '',
+        referral: form.querySelector('#referral').value || '',
+        message: form.querySelector('#message').value || '',
+        status: 'new',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      try {
+        await db.collection('membership-inquiries').add(formData);
+        form.innerHTML = `
+          <div style="text-align: center; padding: var(--space-2xl);">
+            <div style="font-size: 3rem; margin-bottom: var(--space-md);">✅</div>
+            <h3 style="margin-bottom: var(--space-md);">Thank You!</h3>
+            <p style="color: var(--gray-600);">We've received your inquiry and a member will reach out to you soon.</p>
+          </div>
+        `;
+      } catch (error) {
+        console.error('Error submitting inquiry:', error);
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        alert('There was an error submitting your inquiry. Please try again or call us directly at (908) 232-9667.');
+      }
+    });
+  </script>
 </body>
 </html>

@@ -399,6 +399,7 @@
       <div class="tabs">
         <button class="tab active" data-tab="events">Events</button>
         <button class="tab" data-tab="recurring">Recurring Events</button>
+        <button class="tab" data-tab="membership">Membership <span class="tab-badge" id="membership-count">0</span></button>
         <button class="tab" data-tab="inquiries">Hall Inquiries <span class="tab-badge" id="inquiry-count">0</span></button>
         <button class="tab" data-tab="messages">Messages <span class="tab-badge" id="message-count">0</span></button>
       </div>
@@ -527,6 +528,19 @@
               <p>Loading recurring events...</p>
             </li>
           </ul>
+        </div>
+      </div>
+
+      <!-- Membership Inquiries Tab -->
+      <div id="membership-tab" class="tab-content">
+        <div class="admin-card">
+          <h2>Membership Inquiries</h2>
+          <div id="membership-list">
+            <div class="empty-state">
+              <div class="empty-state__icon">🦌</div>
+              <p>Loading membership inquiries...</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -766,6 +780,7 @@
     function initAdmin() {
       loadEvents();
       loadRecurringEvents();
+      loadMembershipInquiries();
       loadInquiries();
       loadMessages();
     }
@@ -930,6 +945,77 @@
       } catch (error) {
         console.error('Error deleting recurring event:', error);
         alert('Error deleting recurring event. Please try again.');
+      }
+    }
+
+    // Load membership inquiries
+    async function loadMembershipInquiries() {
+      const list = document.getElementById('membership-list');
+      const countBadge = document.getElementById('membership-count');
+      
+      try {
+        const snapshot = await db.collection('membership-inquiries').orderBy('createdAt', 'desc').get();
+        const inquiries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        const newCount = inquiries.filter(i => i.status === 'new').length;
+        countBadge.textContent = newCount;
+        
+        if (inquiries.length === 0) {
+          list.innerHTML = '<div class="empty-state"><div class="empty-state__icon">🦌</div><p>No membership inquiries yet</p></div>';
+        } else {
+          list.innerHTML = inquiries.map(inquiry => renderMembershipInquiry(inquiry)).join('');
+        }
+      } catch (error) {
+        console.error('Error loading membership inquiries:', error);
+      }
+    }
+
+    function renderMembershipInquiry(inquiry) {
+      const date = inquiry.createdAt ? inquiry.createdAt.toDate().toLocaleDateString() : 'Unknown';
+      const statusClass = `status-badge--${inquiry.status || 'new'}`;
+      
+      return `
+        <div class="inquiry-item ${inquiry.status === 'new' ? 'inquiry-item--new' : ''}">
+          <div class="inquiry-item__header">
+            <div>
+              <div class="inquiry-item__name">${inquiry.name}</div>
+              <div class="inquiry-item__date">Submitted: ${date}</div>
+            </div>
+            <span class="status-badge ${statusClass}">${inquiry.status || 'new'}</span>
+          </div>
+          <div class="inquiry-item__details">
+            <div><strong>Email:</strong> <a href="mailto:${inquiry.email}">${inquiry.email}</a></div>
+            <div><strong>Phone:</strong> ${inquiry.phone || 'Not provided'}</div>
+            <div><strong>City:</strong> ${inquiry.city || 'Not provided'}</div>
+            <div><strong>Referral:</strong> ${inquiry.referral || 'Not specified'}</div>
+          </div>
+          ${inquiry.message ? `<div class="inquiry-item__message">${inquiry.message}</div>` : ''}
+          <div class="inquiry-item__actions">
+            <button class="btn btn--small btn--ghost" onclick="updateMembershipStatus('${inquiry.id}', 'contacted')">Mark Contacted</button>
+            <button class="btn btn--small btn--ghost" onclick="updateMembershipStatus('${inquiry.id}', 'joined')">Mark Joined</button>
+            <button class="btn btn--small btn--ghost" onclick="updateMembershipStatus('${inquiry.id}', 'closed')">Close</button>
+            <button class="btn btn--small btn--danger" onclick="deleteMembershipInquiry('${inquiry.id}')">Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function updateMembershipStatus(id, status) {
+      try {
+        await db.collection('membership-inquiries').doc(id).update({ status });
+        loadMembershipInquiries();
+      } catch (error) {
+        console.error('Error updating membership inquiry:', error);
+      }
+    }
+
+    async function deleteMembershipInquiry(id) {
+      if (!confirm('Delete this membership inquiry?')) return;
+      try {
+        await db.collection('membership-inquiries').doc(id).delete();
+        loadMembershipInquiries();
+      } catch (error) {
+        console.error('Error deleting membership inquiry:', error);
       }
     }
 

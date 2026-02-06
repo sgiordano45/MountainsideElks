@@ -592,7 +592,7 @@
       <button class="lightbox__nav lightbox__nav--prev" onclick="prevImage()">&#10094;</button>
       <img id="lightbox-img" class="lightbox__img" src="" alt="Hall photo">
       <button class="lightbox__nav lightbox__nav--next" onclick="nextImage()">&#10095;</button>
-      <div class="lightbox__counter"><span id="lightbox-counter">1</span> / 6</div>
+      <div class="lightbox__counter"><span id="lightbox-counter">1</span> / <span id="lightbox-total">6</span></div>
     </div>
   </div>
 
@@ -697,6 +697,7 @@
       img.src = hallPhotos[currentImageIndex].src;
       img.alt = hallPhotos[currentImageIndex].alt;
       document.getElementById('lightbox-counter').textContent = currentImageIndex + 1;
+      document.getElementById('lightbox-total').textContent = hallPhotos.length;
     }
 
     function nextImage() {

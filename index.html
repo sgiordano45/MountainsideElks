@@ -228,13 +228,13 @@
             <h3 class="info-box__title" style="color: var(--white);">Our Impact</h3>
             <ul style="list-style: none; color: var(--gray-300);">
               <li style="padding: var(--space-sm) 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <strong style="color: var(--gold);">$50,000+</strong> in annual charitable giving
+                <strong style="color: var(--gold);" id="stat-giving">$50,000+</strong> in annual charitable giving
               </li>
               <li style="padding: var(--space-sm) 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <strong style="color: var(--gold);">200+</strong> active members
+                <strong style="color: var(--gold);" id="stat-members">200+</strong> active members
               </li>
               <li style="padding: var(--space-sm) 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <strong style="color: var(--gold);">65+</strong> years serving Mountainside
+                <strong style="color: var(--gold);" id="stat-years">65+</strong> years serving Mountainside
               </li>
               <li style="padding: var(--space-sm) 0;">
                 <strong style="color: var(--gold);">Camp Moore</strong> sponsor for special needs children
@@ -378,6 +378,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       EventsManager.loadHomepageEvents('events-grid', 3);
       loadBarHours('bar-hours-table');
+      loadLodgeStats();
     });
 
     async function loadBarHours(tableId) {
@@ -421,6 +422,18 @@
       const ampm = h >= 12 ? 'PM' : 'AM';
       const h12 = h % 12 || 12;
       return m === 0 ? `${h12}:00 ${ampm}` : `${h12}:${m.toString().padStart(2,'0')} ${ampm}`;
+    }
+
+    async function loadLodgeStats() {
+      try {
+        const doc = await db.collection('siteConfig').doc('lodgeStats').get();
+        if (doc.exists) {
+          const data = doc.data();
+          if (data.charitableGiving) document.getElementById('stat-giving').textContent = data.charitableGiving;
+          if (data.memberCount) document.getElementById('stat-members').textContent = data.memberCount;
+          if (data.yearsServing) document.getElementById('stat-years').textContent = data.yearsServing;
+        }
+      } catch (e) { console.error('Error loading lodge stats:', e); }
     }
   </script>
 </body>

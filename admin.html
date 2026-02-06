@@ -432,6 +432,29 @@
         </div>
 
         <div class="admin-card">
+          <h2>Lodge Stats</h2>
+          <p style="color: var(--gray-500); margin-bottom: var(--space-lg);">Update the stats displayed across the website (homepage, about, membership pages).</p>
+          <form id="lodge-stats-form">
+            <div class="form-group">
+              <label for="stat-member-count">Active Member Count</label>
+              <input type="text" id="stat-member-count" placeholder="e.g. 200+" value="200+">
+            </div>
+            <div class="form-group">
+              <label for="stat-charitable-giving">Annual Charitable Giving</label>
+              <input type="text" id="stat-charitable-giving" placeholder="e.g. $50,000+" value="$50,000+">
+            </div>
+            <div class="form-group">
+              <label for="stat-years-serving">Years Serving Mountainside</label>
+              <input type="text" id="stat-years-serving" placeholder="e.g. 65+" value="65+">
+            </div>
+            <div style="margin-top: var(--space-md); display: flex; gap: var(--space-sm); align-items: center;">
+              <button type="submit" class="btn btn--primary">Save Stats</button>
+              <span id="lodge-stats-status" style="color: var(--success); font-weight: 600; display: none;">✓ Saved!</span>
+            </div>
+          </form>
+        </div>
+
+        <div class="admin-card">
           <h2>Change Admin Password</h2>
           <form id="password-form">
             <div class="form-group">
@@ -555,6 +578,7 @@
       initMemberSearch();
       initDocumentUpload();
       initBarHours();
+      initLodgeStats();
     }
 
     // ==========================================
@@ -1516,6 +1540,49 @@
         alert('Error saving bar hours: ' + error.message);
       }
       btn.textContent = 'Save Bar Hours';
+      btn.disabled = false;
+    }
+
+    // ==========================================
+    // LODGE STATS MANAGEMENT
+    // ==========================================
+    function initLodgeStats() {
+      loadLodgeStats();
+      document.getElementById('lodge-stats-form').addEventListener('submit', saveLodgeStats);
+    }
+
+    async function loadLodgeStats() {
+      try {
+        const doc = await db.collection('siteConfig').doc('lodgeStats').get();
+        if (doc.exists) {
+          const data = doc.data();
+          if (data.memberCount) document.getElementById('stat-member-count').value = data.memberCount;
+          if (data.charitableGiving) document.getElementById('stat-charitable-giving').value = data.charitableGiving;
+          if (data.yearsServing) document.getElementById('stat-years-serving').value = data.yearsServing;
+        }
+      } catch (e) { console.error('Error loading lodge stats:', e); }
+    }
+
+    async function saveLodgeStats(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      const status = document.getElementById('lodge-stats-status');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      try {
+        await db.collection('siteConfig').doc('lodgeStats').set({
+          memberCount: document.getElementById('stat-member-count').value.trim(),
+          charitableGiving: document.getElementById('stat-charitable-giving').value.trim(),
+          yearsServing: document.getElementById('stat-years-serving').value.trim(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        status.style.display = 'inline';
+        setTimeout(() => status.style.display = 'none', 3000);
+      } catch (error) {
+        alert('Error saving stats: ' + error.message);
+      }
+      btn.textContent = 'Save Stats';
       btn.disabled = false;
     }
 

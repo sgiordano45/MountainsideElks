@@ -182,7 +182,7 @@
         <div class="hero__content">
           <h1 class="hero__title">Become an Elk</h1>
           <p class="hero__subtitle">
-            Join a community of 200+ members dedicated to service, fellowship, and making a difference.
+            Join a community of <span id="stat-members">200+</span> members dedicated to service, fellowship, and making a difference.
           </p>
         </div>
       </div>
@@ -647,6 +647,17 @@
         alert('There was an error submitting your inquiry. Please try again or call us directly at (908) 232-9667.');
       }
     });
+
+    // Load lodge stats from Firebase
+    async function loadLodgeStats() {
+      try {
+        const doc = await db.collection('siteConfig').doc('lodgeStats').get();
+        if (doc.exists && doc.data().memberCount) {
+          document.getElementById('stat-members').textContent = doc.data().memberCount;
+        }
+      } catch (e) { console.error('Error loading lodge stats:', e); }
+    }
+    document.addEventListener('DOMContentLoaded', loadLodgeStats);
   </script>
 </body>
 </html>

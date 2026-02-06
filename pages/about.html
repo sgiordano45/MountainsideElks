@@ -109,7 +109,7 @@
           with physical and developmental challenges.
         </p>
         <p>
-          Today, our 200+ member lodge continues to grow, welcoming new members who share 
+          Today, our <span id="stat-members">200+</span> member lodge continues to grow, welcoming new members who share 
           our commitment to service and community.
         </p>
       </div>
@@ -324,7 +324,19 @@
       }
     }
     
-    document.addEventListener('DOMContentLoaded', loadOfficers);
+    document.addEventListener('DOMContentLoaded', function() {
+      loadOfficers();
+      loadLodgeStats();
+    });
+
+    async function loadLodgeStats() {
+      try {
+        const doc = await db.collection('siteConfig').doc('lodgeStats').get();
+        if (doc.exists && doc.data().memberCount) {
+          document.getElementById('stat-members').textContent = doc.data().memberCount;
+        }
+      } catch (e) { console.error('Error loading lodge stats:', e); }
+    }
   </script>
 </body>
 </html>

@@ -417,6 +417,21 @@
       <!-- Settings Tab -->
       <div id="settings-tab" class="tab-content">
         <div class="admin-card">
+          <h2>Bar Hours</h2>
+          <p style="color: var(--gray-500); margin-bottom: var(--space-lg);">Update bar hours displayed on the homepage and contact page.</p>
+          <form id="bar-hours-form">
+            <div class="form-group" style="display: grid; grid-template-columns: 100px 1fr 1fr auto; gap: var(--space-sm); align-items: center; font-weight: 600; margin-bottom: var(--space-xs); padding-bottom: var(--space-xs); border-bottom: 2px solid var(--gray-200);">
+              <span>Day</span><span>Open</span><span>Close</span><span style="width: 90px; text-align: center;">Closed?</span>
+            </div>
+            <div id="bar-hours-fields"></div>
+            <div style="margin-top: var(--space-md); display: flex; gap: var(--space-sm); align-items: center;">
+              <button type="submit" class="btn btn--primary">Save Bar Hours</button>
+              <span id="bar-hours-status" style="color: var(--success); font-weight: 600; display: none;">✓ Saved!</span>
+            </div>
+          </form>
+        </div>
+
+        <div class="admin-card">
           <h2>Change Admin Password</h2>
           <form id="password-form">
             <div class="form-group">
@@ -539,6 +554,7 @@
       initImageUploads();
       initMemberSearch();
       initDocumentUpload();
+      initBarHours();
     }
 
     // ==========================================
@@ -1422,6 +1438,86 @@
 
     async function updateMessageStatus(id, status) { try { await db.collection('contact-messages').doc(id).update({ status }); loadMessages(); } catch (e) { console.error(e); } }
     async function deleteMessage(id) { if (!confirm('Delete?')) return; try { await db.collection('contact-messages').doc(id).delete(); loadMessages(); } catch (e) { console.error(e); } }
+
+    // ==========================================
+    // BAR HOURS MANAGEMENT
+    // ==========================================
+    const BAR_HOURS_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const BAR_HOURS_DEFAULTS = {
+      Sunday:    { open: '13:00', close: '23:00', closed: false, note: '' },
+      Monday:    { open: '19:00', close: '23:00', closed: false, note: '' },
+      Tuesday:   { open: '18:00', close: '23:00', closed: false, note: 'Dinner Night' },
+      Wednesday: { open: '19:00', close: '23:00', closed: false, note: '' },
+      Thursday:  { open: '19:00', close: '23:00', closed: false, note: '' },
+      Friday:    { open: '19:00', close: '23:00', closed: false, note: '' },
+      Saturday:  { open: '12:00', close: '23:00', closed: true, note: '' }
+    };
+
+    function initBarHours() {
+      renderBarHoursFields(BAR_HOURS_DEFAULTS);
+      loadBarHours();
+      document.getElementById('bar-hours-form').addEventListener('submit', saveBarHours);
+    }
+
+    function renderBarHoursFields(hours) {
+      const container = document.getElementById('bar-hours-fields');
+      container.innerHTML = BAR_HOURS_DAYS.map(day => {
+        const h = hours[day] || BAR_HOURS_DEFAULTS[day];
+        return `
+          <div class="form-group" style="display: grid; grid-template-columns: 100px 1fr 1fr auto; gap: var(--space-sm); align-items: center; margin-bottom: var(--space-xs);">
+            <label style="margin: 0; font-weight: 500;">${day}</label>
+            <input type="time" id="hours-${day}-open" value="${h.open}" ${h.closed ? 'disabled' : ''} style="padding: 6px 8px;">
+            <input type="time" id="hours-${day}-close" value="${h.close}" ${h.closed ? 'disabled' : ''} style="padding: 6px 8px;">
+            <label style="margin: 0; display: flex; align-items: center; gap: 4px; width: 90px; justify-content: center; cursor: pointer;">
+              <input type="checkbox" id="hours-${day}-closed" ${h.closed ? 'checked' : ''} onchange="document.getElementById('hours-${day}-open').disabled = this.checked; document.getElementById('hours-${day}-close').disabled = this.checked;"> Closed
+            </label>
+          </div>
+          <div class="form-group" style="display: grid; grid-template-columns: 100px 1fr; gap: var(--space-sm); margin-bottom: var(--space-sm);">
+            <span></span>
+            <input type="text" id="hours-${day}-note" value="${h.note || ''}" placeholder="Optional note (e.g. Dinner Night)" style="padding: 4px 8px; font-size: 0.8125rem; font-style: italic;">
+          </div>`;
+      }).join('');
+    }
+
+    async function loadBarHours() {
+      try {
+        const doc = await db.collection('siteConfig').doc('barHours').get();
+        if (doc.exists) {
+          renderBarHoursFields(doc.data());
+        }
+      } catch (e) { console.error('Error loading bar hours:', e); }
+    }
+
+    async function saveBarHours(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      const status = document.getElementById('bar-hours-status');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      const hours = {};
+      BAR_HOURS_DAYS.forEach(day => {
+        hours[day] = {
+          open: document.getElementById(`hours-${day}-open`).value,
+          close: document.getElementById(`hours-${day}-close`).value,
+          closed: document.getElementById(`hours-${day}-closed`).checked,
+          note: document.getElementById(`hours-${day}-note`).value.trim()
+        };
+      });
+
+      try {
+        await db.collection('siteConfig').doc('barHours').set({
+          ...hours,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        status.style.display = 'inline';
+        setTimeout(() => status.style.display = 'none', 3000);
+      } catch (error) {
+        alert('Error saving bar hours: ' + error.message);
+      }
+      btn.textContent = 'Save Bar Hours';
+      btn.disabled = false;
+    }
 
     // ==========================================
     // PASSWORD CHANGE

@@ -188,35 +188,8 @@
           <div>
             <h2 style="margin-bottom: var(--space-xl);">Bar Hours</h2>
             <div class="contact-card">
-              <table class="hours-table">
-                <tr>
-                  <td>Sunday</td>
-                  <td>1:00 PM - 11:00 PM</td>
-                </tr>
-                <tr>
-                  <td>Monday</td>
-                  <td>7:00 PM - 11:00 PM</td>
-                </tr>
-                <tr>
-                  <td>Tuesday</td>
-                  <td>6:00 PM - 11:00 PM <em style="font-size: 0.8125rem; color: var(--gold-dark);">(Dinner Night)</em></td>
-                </tr>
-                <tr>
-                  <td>Wednesday</td>
-                  <td>7:00 PM - 11:00 PM</td>
-                </tr>
-                <tr>
-                  <td>Thursday</td>
-                  <td>7:00 PM - 11:00 PM</td>
-                </tr>
-                <tr>
-                  <td>Friday</td>
-                  <td>7:00 PM - 11:00 PM</td>
-                </tr>
-                <tr>
-                  <td>Saturday</td>
-                  <td class="hours-closed">Closed</td>
-                </tr>
+              <table class="hours-table" id="bar-hours-table">
+                <tr><td colspan="2" style="color: var(--gray-500);">Loading...</td></tr>
               </table>
             </div>
             <p style="color: var(--gray-500); font-size: 0.875rem; margin-top: var(--space-md);">
@@ -381,10 +354,54 @@
   <script src="../js/main.js"></script>
   
   <script>
-    // Initialize contact form
+    // Initialize contact form and load bar hours
     document.addEventListener('DOMContentLoaded', function() {
       ContactForm.initFormHandler('contact-form');
+      loadBarHours('bar-hours-table');
     });
+
+    async function loadBarHours(tableId) {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const defaults = {
+        Sunday: { open: '13:00', close: '23:00', closed: false, note: '' },
+        Monday: { open: '19:00', close: '23:00', closed: false, note: '' },
+        Tuesday: { open: '18:00', close: '23:00', closed: false, note: 'Dinner Night' },
+        Wednesday: { open: '19:00', close: '23:00', closed: false, note: '' },
+        Thursday: { open: '19:00', close: '23:00', closed: false, note: '' },
+        Friday: { open: '19:00', close: '23:00', closed: false, note: '' },
+        Saturday: { open: '12:00', close: '23:00', closed: true, note: '' }
+      };
+      try {
+        const doc = await db.collection('siteConfig').doc('barHours').get();
+        const hours = doc.exists ? doc.data() : defaults;
+        renderBarHoursTable(tableId, days, hours);
+      } catch (e) {
+        console.error('Error loading bar hours:', e);
+        renderBarHoursTable(tableId, days, defaults);
+      }
+    }
+
+    function renderBarHoursTable(tableId, days, hours) {
+      const table = document.getElementById(tableId);
+      table.innerHTML = days.map(day => {
+        const h = hours[day] || { closed: true };
+        if (h.closed) {
+          return `<tr><td>${day}</td><td class="hours-closed">Closed</td></tr>`;
+        }
+        const open = formatTime(h.open);
+        const close = formatTime(h.close);
+        const note = h.note ? ` <em style="font-size: 0.8125rem; color: var(--gold-dark);">(${h.note})</em>` : '';
+        return `<tr><td>${day}</td><td>${open} - ${close}${note}</td></tr>`;
+      }).join('');
+    }
+
+    function formatTime(t) {
+      if (!t) return '';
+      const [h, m] = t.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h % 12 || 12;
+      return m === 0 ? `${h12}:00 ${ampm}` : `${h12}:${m.toString().padStart(2,'0')} ${ampm}`;
+    }
   </script>
 </body>
 </html>

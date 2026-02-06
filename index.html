@@ -273,14 +273,8 @@
             
             <div style="margin-bottom: var(--space-xl);">
               <h4 style="margin-bottom: var(--space-sm);">Bar Hours</h4>
-              <table style="font-size: 0.9375rem;">
-                <tr><td style="padding-right: var(--space-xl);">Sunday</td><td>1:00 PM - 11:00 PM</td></tr>
-                <tr><td>Monday</td><td>7:00 PM - 11:00 PM</td></tr>
-                <tr><td>Tuesday</td><td>6:00 PM - 11:00 PM <em style="color: var(--gray-500);">(Dinner Night)</em></td></tr>
-                <tr><td>Wednesday</td><td>7:00 PM - 11:00 PM</td></tr>
-                <tr><td>Thursday</td><td>7:00 PM - 11:00 PM</td></tr>
-                <tr><td>Friday</td><td>7:00 PM - 11:00 PM</td></tr>
-                <tr><td>Saturday</td><td>Closed</td></tr>
+              <table id="bar-hours-table" style="font-size: 0.9375rem;">
+                <tr><td colspan="2" style="color: var(--gray-500);">Loading...</td></tr>
               </table>
             </div>
             
@@ -383,7 +377,51 @@
     // Load events from Firebase when page loads
     document.addEventListener('DOMContentLoaded', function() {
       EventsManager.loadHomepageEvents('events-grid', 3);
+      loadBarHours('bar-hours-table');
     });
+
+    async function loadBarHours(tableId) {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const defaults = {
+        Sunday: { open: '13:00', close: '23:00', closed: false, note: '' },
+        Monday: { open: '19:00', close: '23:00', closed: false, note: '' },
+        Tuesday: { open: '18:00', close: '23:00', closed: false, note: 'Dinner Night' },
+        Wednesday: { open: '19:00', close: '23:00', closed: false, note: '' },
+        Thursday: { open: '19:00', close: '23:00', closed: false, note: '' },
+        Friday: { open: '19:00', close: '23:00', closed: false, note: '' },
+        Saturday: { open: '12:00', close: '23:00', closed: true, note: '' }
+      };
+      try {
+        const doc = await db.collection('siteConfig').doc('barHours').get();
+        const hours = doc.exists ? doc.data() : defaults;
+        renderBarHoursTable(tableId, days, hours);
+      } catch (e) {
+        console.error('Error loading bar hours:', e);
+        renderBarHoursTable(tableId, days, defaults);
+      }
+    }
+
+    function renderBarHoursTable(tableId, days, hours) {
+      const table = document.getElementById(tableId);
+      table.innerHTML = days.map(day => {
+        const h = hours[day] || { closed: true };
+        if (h.closed) {
+          return `<tr><td style="padding-right: var(--space-xl);">${day}</td><td>Closed</td></tr>`;
+        }
+        const open = formatTime(h.open);
+        const close = formatTime(h.close);
+        const note = h.note ? ` <em style="color: var(--gray-500);">(${h.note})</em>` : '';
+        return `<tr><td style="padding-right: var(--space-xl);">${day}</td><td>${open} - ${close}${note}</td></tr>`;
+      }).join('');
+    }
+
+    function formatTime(t) {
+      if (!t) return '';
+      const [h, m] = t.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const h12 = h % 12 || 12;
+      return m === 0 ? `${h12}:00 ${ampm}` : `${h12}:${m.toString().padStart(2,'0')} ${ampm}`;
+    }
   </script>
 </body>
 </html>

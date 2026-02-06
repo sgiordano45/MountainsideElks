@@ -237,19 +237,52 @@ const EventsManager = {
     }
   },
 
+  renderRecurringCard(event) {
+    const accessLabels = { open: 'Open to All', guests: 'Members & Guests', members: 'Members Only' };
+    const accessLabel = accessLabels[event.accessLevel] || (event.openToAll ? 'Open to All' : 'Members & Guests');
+    const hasDetails = event.details;
+    const clickAttr = hasDetails ? `onclick="EventsManager.showRecurringModal('${event.id}')" style="cursor:pointer;"` : '';
+    
+    return `
+      <article class="card" ${clickAttr} data-event-id="${event.id}">
+        <div class="card__image">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg, #1a365d 0%, #2c5282 100%);display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:3rem;">${event.emoji || '\u{1F4C5}'}</span>
+          </div>
+        </div>
+        <div class="card__body">
+          <span class="card__tag">${accessLabel}</span>
+          <h3 class="card__title">${event.title}</h3>
+          <p class="card__text">${event.description}</p>
+          <p class="card__meta">${event.schedule}</p>
+          ${hasDetails ? '<p style="font-size:0.8rem;color:var(--gold-dark);margin-top:var(--space-sm);">Click for details \u2192</p>' : ''}
+        </div>
+      </article>
+    `;
+  },
+
   async loadHomepageEvents(containerId, limit = 3) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    container.innerHTML = '<p class="text-center">Loading events...</p>';
+    container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: var(--gray-500);">Loading events...</p>';
+    
+    // Try upcoming special events first
     const events = await this.getUpcomingEvents(limit);
     
-    if (events.length === 0) {
-      container.innerHTML = '<p class="text-center" style="color: var(--gray-500);">No upcoming events. Check back soon!</p>';
+    if (events.length > 0) {
+      container.innerHTML = events.map(event => this.renderEventCard(event)).join('');
       return;
     }
 
-    container.innerHTML = events.map(event => this.renderEventCard(event)).join('');
+    // Fall back to recurring events
+    const recurring = await this.getRecurringEvents();
+    
+    if (recurring.length > 0) {
+      container.innerHTML = recurring.slice(0, limit).map(event => this.renderRecurringCard(event)).join('');
+    } else {
+      container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: var(--gray-500);">No upcoming events. Check back soon!</p>';
+    }
   },
 
   async loadEventsPage(recurringContainerId, upcomingContainerId) {

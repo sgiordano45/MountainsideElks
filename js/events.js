@@ -255,9 +255,12 @@ const EventsManager = {
   async loadEventsPage(recurringContainerId, upcomingContainerId) {
     const recurringContainer = document.getElementById(recurringContainerId);
     if (recurringContainer) {
+      recurringContainer.innerHTML = '<p class="text-center" style="color: var(--gray-500);">Loading regular events...</p>';
       const recurringEvents = await this.getRecurringEvents();
       if (recurringEvents.length > 0) {
         recurringContainer.innerHTML = recurringEvents.map(event => this.renderRecurringEvent(event)).join('');
+      } else {
+        recurringContainer.innerHTML = '<p class="text-center" style="color: var(--gray-500);">No regular events listed yet. Check back soon!</p>';
       }
     }
 
